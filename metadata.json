@@ -1,0 +1,8 @@
+{
+  "name": "LynkSell",
+  "description": "An AI-powered landing page generator for Indonesian MSMEs to create independent sales channels from product photos in 30 seconds. 🚀",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

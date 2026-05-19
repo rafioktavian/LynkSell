@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and auth info.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "passwordHash": { "type": "string", "description": "Null for OAuth users" },
+        "image": { "type": "string" },
+        "brandName": { "type": "string" },
+        "brandSlug": { "type": "string" },
+        "createdAt": { "type": "object" },
+        "updatedAt": { "type": "object" }
+      },
+      "required": ["id", "email", "name", "createdAt", "updatedAt"]
+    },
+    "Page": {
+      "title": "Page",
+      "description": "Landing page created by a user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "brandSlug": { "type": "string" },
+        "pageSlug": { "type": "string" },
+        "fullSlug": { "type": "string" },
+        "productName": { "type": "string" },
+        "productImageUrl": { "type": "string" },
+        "copyData": { "type": "object" },
+        "testimonials": { "type": "array" },
+        "colorScheme": { "type": "string" },
+        "whatsappNumber": { "type": "string" },
+        "harga": { "type": "string" },
+        "targetPembeli": { "type": "string" },
+        "status": { "type": "string" },
+        "viewCount": { "type": "number", "description": "We might increment this on page load. Should not be directly updated fully by users" },
+        "publishedAt": { "type": "object" },
+        "createdAt": { "type": "object" },
+        "updatedAt": { "type": "object" }
+      },
+      "required": ["userId", "brandSlug", "pageSlug", "fullSlug", "productName", "productImageUrl", "createdAt", "updatedAt"]
+    },
+    "SlugIndex": {
+      "title": "SlugIndex",
+      "description": "For uniqueness check across brands and pages",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string" }
+      },
+      "required": ["userId", "type"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User documents"
+    },
+    "/pages/{pageId}": {
+      "schema": { "$ref": "#/entities/Page" },
+      "description": "Landing pages created by users"
+    },
+    "/slugIndex/{slug}": {
+      "schema": { "$ref": "#/entities/SlugIndex" },
+      "description": "Index of globally unique slugs"
+    }
+  }
+}
