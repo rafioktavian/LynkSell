@@ -64,7 +64,7 @@ export default function RootLayout({
       className={`${plusJakarta.variable} ${interFont.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-slate-50 flex flex-col font-sans">
+      <body className="min-h-screen bg-slate-50 flex flex-col font-sans" suppressHydrationWarning>
         <main className="flex-1 flex flex-col relative">
           {children}
         </main>

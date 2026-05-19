@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Logo } from "@/components/ui/logo";
 
 export function DashboardHeader({ user }: { user: any }) {
   const [copied, setCopied] = useState(false);
@@ -24,6 +25,7 @@ export function DashboardHeader({ user }: { user: any }) {
     <header className="w-full bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10 shrink-0 sticky top-0">
       <div className="flex items-center gap-6">
         <Link href="/dashboard" className="flex items-center gap-2">
+          <Logo className="w-8 h-8 text-primary" />
           <span className="font-bold text-xl text-primary tracking-tight">LynkSell</span>
         </Link>
         

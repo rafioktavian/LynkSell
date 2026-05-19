@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import { Bot, BadgePercent, Globe2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const features = [
   {
@@ -18,7 +19,7 @@ const features = [
     description: "Marketplace mengambil potongan 10-25% dari penjualan Anda? Di LynkSell, 100% hasil penjualan masuk ke kantong Anda. Kami tidak menahan uang atau memberikan biaya admin tersembunyi.",
     icon: BadgePercent,
     color: "bg-emerald-100 text-emerald-600",
-    image: "https://images.unsplash.com/photo-1580519542036-ed47f3e42214?auto=format&fit=crop&q=80&w=800&h=600",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=800&h=600",
     cta: "Mulai jual mandiri",
   },
   {
@@ -26,7 +27,7 @@ const features = [
     description: "Gunakan satu link LynkSell Anda untuk ditaruh di bio Instagram, TikTok, Facebook, atau broadcast WhatsApp. Tidak perlu suruh pelanggan install aplikasi marketplace lagi.",
     icon: Globe2,
     color: "bg-purple-100 text-purple-600",
-    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800&h=600",
+    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&q=80&w=800&h=600",
     cta: "Buat link pertama",
   }
 ];
@@ -91,11 +92,12 @@ export default function FeaturesSection() {
                   className="flex-1 w-full"
                 >
                   <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] bg-slate-200 border border-slate-200/60">
-                    <img 
+                    <Image 
                       src={feature.image} 
                       alt={feature.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
+                      fill
+                      className="object-cover"
+                      referrerPolicy="no-referrer"
                     />
                     {/* Decorative gloss effect */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/20" />

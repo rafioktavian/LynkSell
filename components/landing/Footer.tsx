@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
 
 export default function Footer() {
   return (
@@ -11,9 +11,7 @@ export default function Footer() {
           {/* Logo Column */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
-              </div>
+              <Logo className="w-8 h-8 text-indigo-600 drop-shadow-md" />
               <span className="text-xl font-heading font-extrabold text-slate-900 tracking-tight">
                 LynkSell
               </span>
