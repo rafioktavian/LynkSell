@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, DM_Sans } from 'next/font/google';
+import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -10,10 +10,10 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-const dmSans = DM_Sans({
+const interFont = Inter({
   subsets: ['latin'],
-  variable: '--font-dm-sans',
-  weight: ['400', '500', '600'],
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 
@@ -61,7 +61,7 @@ export default function RootLayout({
   return (
     <html 
       lang="id" 
-      className={`${plusJakarta.variable} ${dmSans.variable} antialiased`}
+      className={`${plusJakarta.variable} ${interFont.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-slate-50 flex flex-col font-sans">
