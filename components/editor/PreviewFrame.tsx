@@ -1,50 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Copy, ExternalLink, Monitor, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { createRoot } from 'react-dom/client';
-import { flushSync } from 'react-dom';
 import { LandingPageRenderer } from "../landing/LandingPageRenderer";
-
-function generateHTML(page: any) {
-  const div = document.createElement("div");
-  const root = createRoot(div);
-  flushSync(() => {
-    root.render(<LandingPageRenderer page={page} />);
-  });
-  const reactHtml = div.innerHTML;
-  setTimeout(() => root.unmount(), 0);
-
-  return `
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${page.productName || 'Landing Page'}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body style="margin: 0; padding: 0;">
-  ${reactHtml}
-</body>
-</html>
-  `;
-}
 
 export function PreviewFrame({ page }: { page: any }) {
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
-  const [srcDoc, setSrcDoc] = useState("");
-
-  // Debounced html generation so we don't block main thread while user types
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setSrcDoc(generateHTML(page));
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [page]);
-
   const [origin, setOrigin] = useState("");
 
   useEffect(() => {
@@ -95,23 +58,13 @@ export function PreviewFrame({ page }: { page: any }) {
       </div>
 
       {/* Frame Container */}
-      <div className="flex-1 overflow-auto p-4 md:p-8 flex items-start justify-center transition-all min-h-0">
+      <div className="flex-1 overflow-auto p-4 md:p-8 flex items-start justify-center transition-all min-h-0 relative">
         <div 
-           className={`bg-white shadow-xl rounded-b-xl rounded-t-sm border border-neutral-200 overflow-hidden transition-all duration-300 ease-in-out h-full ${
+           className={`bg-white shadow-xl rounded-b-xl rounded-t-sm border border-neutral-200 overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out h-full relative ${
              device === 'mobile' ? 'w-[390px]' : 'w-full max-w-[800px]'
            }`}
         >
-          {srcDoc ? (
-            <iframe 
-              srcDoc={srcDoc} 
-              className="w-full h-full border-none bg-white"
-              title="Preview Landing Page"
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full text-neutral-400">
-              <span className="animate-pulse">Menyiapkan Preview...</span>
-            </div>
-          )}
+          <LandingPageRenderer page={page} />
         </div>
       </div>
 
