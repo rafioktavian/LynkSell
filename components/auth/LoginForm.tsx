@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, AlertCircle } from "lucide-react";
-import { loginUserAction, googleSignInAction } from "@/app/actions/user.actions";
+import { loginUserAction } from "@/app/actions/user.actions";
 
 const loginSchema = z.object({
   email: z.string().email("Email tidak valid"),
@@ -108,7 +108,11 @@ export function LoginForm() {
 
   const onGoogleSignIn = async () => {
     setIsLoading(true);
-    await googleSignInAction();
+    try {
+      await signIn("google", { callbackUrl: "/dashboard" });
+    } catch {
+      setIsLoading(false);
+    }
   };
 
   const onDemoSignIn = () => {

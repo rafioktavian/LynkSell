@@ -13,6 +13,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // but if we do, we need the session strategy to be jwt or keep it for OAuth.
   // NextAuth v5 suggests keeping session strategy to jwt when mixing credentials and oauth.
   session: { strategy: "jwt" },
+  adapter: FirestoreAdapter(getAdminDb()),
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,

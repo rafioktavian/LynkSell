@@ -34,7 +34,7 @@ export default function TemplatesPage() {
                   alt="Template Elegant" 
                   fill 
                   className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                  unoptimized
+                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 text-white text-left">
@@ -60,7 +60,7 @@ export default function TemplatesPage() {
                   alt="Template Fresh" 
                   fill 
                   className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                  unoptimized
+                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 text-white text-left">
@@ -86,7 +86,7 @@ export default function TemplatesPage() {
                   alt="Template Bold" 
                   fill 
                   className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                  unoptimized
+                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 text-white text-left">
@@ -108,11 +108,11 @@ export default function TemplatesPage() {
             <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow group">
               <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden">
                 <Image 
-                  src="https://images.unsplash.com/photo-1505691938895-1758d7ebb519?q=80&w=1600&auto=format&fit=crop" 
+                  src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1600&auto=format&fit=crop" 
                   alt="Template Minimalist" 
                   fill 
                   className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                  unoptimized
+                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 text-white text-left">

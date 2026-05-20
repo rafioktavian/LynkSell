@@ -37,11 +37,15 @@ export async function setupBrandAction(formData: FormData): Promise<ActionResult
 
     const db = getAdminDb();
     
-    await db.collection('users').doc(session.user.id).update({
+    await db.collection('users').doc(session.user.id).set({
+      id: session.user.id,
+      name: session.user.name || null,
+      email: session.user.email || null,
+      image: session.user.image || null,
       brandName: validBrandName,
       brandSlug: uniqueSlug,
       updatedAt: FieldValue.serverTimestamp(),
-    });
+    }, { merge: true });
 
     await db.collection('slugIndex').doc(`brand:${uniqueSlug}`).set({
       userId: session.user.id,
@@ -73,11 +77,12 @@ export async function updateUserProfileAction(formData: FormData): Promise<Actio
     }
 
     const db = getAdminDb();
-    await db.collection('users').doc(session.user.id).update({
+    await db.collection('users').doc(session.user.id).set({
+      id: session.user.id,
       name: name.trim(),
       ...(image ? { image } : {}),
       updatedAt: FieldValue.serverTimestamp(),
-    });
+    }, { merge: true });
 
     revalidatePath('/dashboard');
     return { success: true };
@@ -85,11 +90,6 @@ export async function updateUserProfileAction(formData: FormData): Promise<Actio
     console.error('Error updating user profile:', error);
     return { success: false, error: error.message || 'Internal server error' };
   }
-}
-
-export async function googleSignInAction() {
-  const { signIn: serverSignIn } = await import('@/auth');
-  await serverSignIn('google', { redirectTo: '/dashboard' });
 }
 
 export async function loginUserAction(formData: FormData): Promise<ActionResult> {
@@ -110,14 +110,14 @@ export async function loginUserAction(formData: FormData): Promise<ActionResult>
     
     return { success: true };
   } catch (error: any) {
+    if (typeof error === 'object' && error !== null && error.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error;
+    }
     if (error?.name === 'AuthError' || error?.type) {
       if (error.type === 'CredentialsSignin') {
         return { success: false, error: 'Email atau password salah' };
       }
       return { success: false, error: error.message || 'Terjadi kesalahan sistem' };
-    }
-    if (error?.message?.includes('NEXT_REDIRECT')) {
-        throw error;
     }
     return { success: false, error: error.message || 'Terjadi kesalahan saat masuk' };
   }

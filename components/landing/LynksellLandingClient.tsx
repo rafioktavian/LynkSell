@@ -751,7 +751,12 @@ export default function LynksellLandingClient() {
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          object-fit: cover;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 1.1rem;
+          flex-shrink: 0;
         }
         .t-author-info h4 {
           font-weight: 600;
@@ -1029,8 +1034,14 @@ export default function LynksellLandingClient() {
             </div>
             <div className="mockup-body">
               <div className="mockup-container">
-                <div className="mockup-placeholder-img">
-                  📸 Foto produk kamu tampil di sini
+                <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', marginBottom: '24px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--color-border)', backgroundColor: '#f8fafc' }}>
+                  <Image 
+                    src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=800&auto=format&fit=crop" 
+                    alt="Serum Vitamin C" 
+                    fill 
+                    style={{ objectFit: 'cover' }}
+                    referrerPolicy="no-referrer"
+                  />
                 </div>
                 <h3 className="mockup-title">"Kulit Cerah Dalam 7 Hari — Atau Uang Kembali"</h3>
                 <p className="mockup-desc">Serum Vitamin C 20% yang diformulasikan khusus untuk kulit tropis. Sudah dipakai 3.200+ pembeli dengan rating 4.9/5.</p>
@@ -1164,7 +1175,7 @@ export default function LynksellLandingClient() {
               <div className="testimonial-card">
                 <div className="t-card-header">
                   <div className="t-author">
-                    <img src="https://ui-avatars.com/api/?name=Siti+Rahma&background=random&color=fff" alt="" className="t-avatar" />
+                    <div className="t-avatar" style={{ background: '#BFDBFE', color: '#1D4ED8' }}>SR</div>
                     <div className="t-author-info">
                       <h4>Siti Rahma</h4>
                       <p>Bandung</p>
@@ -1181,7 +1192,7 @@ export default function LynksellLandingClient() {
               <div className="testimonial-card">
                 <div className="t-card-header">
                   <div className="t-author">
-                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=random&color=fff" alt="" className="t-avatar" />
+                    <div className="t-avatar" style={{ background: '#A7F3D0', color: '#047857' }}>BS</div>
                     <div className="t-author-info">
                       <h4>Budi Santoso</h4>
                       <p>Semarang</p>
@@ -1198,7 +1209,7 @@ export default function LynksellLandingClient() {
               <div className="testimonial-card">
                 <div className="t-card-header">
                   <div className="t-author">
-                    <img src="https://ui-avatars.com/api/?name=Maya+Sari&background=random&color=fff" alt="" className="t-avatar" />
+                    <div className="t-avatar" style={{ background: '#FDE68A', color: '#B45309' }}>MS</div>
                     <div className="t-author-info">
                       <h4>Maya Sari</h4>
                       <p>Surabaya</p>
@@ -1215,7 +1226,7 @@ export default function LynksellLandingClient() {
               <div className="testimonial-card">
                 <div className="t-card-header">
                   <div className="t-author">
-                    <img src="https://ui-avatars.com/api/?name=Ahmad+Fauzi&background=random&color=fff" alt="" className="t-avatar" />
+                    <div className="t-avatar" style={{ background: '#E9D5FF', color: '#6B21A8' }}>AF</div>
                     <div className="t-author-info">
                       <h4>Ahmad Fauzi</h4>
                       <p>Jakarta</p>
