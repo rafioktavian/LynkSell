@@ -48,9 +48,9 @@ export default function Footer() {
             <h4 className="font-bold text-slate-900 mb-4">Perusahaan</h4>
             <ul className="space-y-3">
               <li><a href="#" className="text-sm text-slate-600 hover:text-indigo-600 transition-colors">Tentang Kami</a></li>
-              <li><a href="#" className="text-sm text-slate-600 hover:text-indigo-600 transition-colors">Kebijakan Privasi</a></li>
-              <li><a href="#" className="text-sm text-slate-600 hover:text-indigo-600 transition-colors">Syarat &amp; Ketentuan</a></li>
-              <li><a href="#" className="text-sm text-slate-600 hover:text-indigo-600 transition-colors">Kontak</a></li>
+              <li><Link href="/privacy" className="text-sm text-slate-600 hover:text-indigo-600 transition-colors">Kebijakan Privasi</Link></li>
+              <li><Link href="/terms" className="text-sm text-slate-600 hover:text-indigo-600 transition-colors">Syarat &amp; Ketentuan</Link></li>
+              <li><Link href="/contact" className="text-sm text-slate-600 hover:text-indigo-600 transition-colors">Kontak</Link></li>
             </ul>
           </div>
         </div>
