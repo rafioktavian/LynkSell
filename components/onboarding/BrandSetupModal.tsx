@@ -89,7 +89,7 @@ export function BrandSetupModal({ isOpen }: { isOpen: boolean }) {
             {brandName && (
               <div className="text-sm bg-gray-50 p-2 rounded text-gray-600 border border-gray-100 flex items-center gap-1.5">
                 <span className="text-xs font-medium bg-primary/10 text-primary px-1.5 py-0.5 rounded">URL Preview</span>
-                <span className="px-1 text-gray-400 text-xs">lynksell.id/</span><span className="font-semibold text-gray-900">{slugPreview || "..."}</span>
+                <span className="px-1 text-gray-400 text-xs">{typeof window !== 'undefined' ? window.location.host : ''}/</span><span className="font-semibold text-gray-900">{slugPreview || "..."}</span>
               </div>
             )}
           </div>

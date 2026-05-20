@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +24,11 @@ export function Step1Upload({
   const [loading, setLoading] = useState(false);
   const [progressMsg, setProgressMsg] = useState("");
   const [analysisError, setAnalysisError] = useState(false);
+  const [host, setHost] = useState("");
+
+  useEffect(() => {
+    setHost(window.location.host);
+  }, []);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -182,7 +187,7 @@ export function Step1Upload({
              </div>
              
              <div className="text-sm text-neutral-600 bg-white p-3 rounded border border-neutral-200 break-all">
-                URL Anda nantinya: <span className="font-medium text-black">lynksell.id/{brandSlug}/{state.suggestedPageSlug}</span>
+                URL Anda nantinya: <span className="font-medium text-black">{host}/{brandSlug}/{state.suggestedPageSlug}</span>
              </div>
            </div>
         </div>

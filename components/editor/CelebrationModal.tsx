@@ -22,8 +22,9 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Fallback if window is undefined during SSR
+  const host = typeof window !== "undefined" ? window.location.host : "";
   const fullUrl = typeof window !== "undefined" ? `${window.location.origin}${pageUrl}` : pageUrl;
-  const displayUrl = `lynksell.id/${brandSlug}/${pageSlug}`;
+  const displayUrl = `${host}/${brandSlug}/${pageSlug}`;
 
   useEffect(() => {
     // Fire confetti

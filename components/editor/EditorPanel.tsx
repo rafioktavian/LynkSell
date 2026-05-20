@@ -211,8 +211,16 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
     setOpenSection(openSection === idx ? -1 : idx);
   };
 
-  const publishedUrl = `lynksell.id/${page.brandSlug}/${page.pageSlug}`;
-  const fullUrl = `https://${publishedUrl}`;
+  const [host, setHost] = useState("");
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setHost(window.location.host);
+    setOrigin(window.location.origin);
+  }, []);
+
+  const publishedUrl = `${host}/${page.brandSlug}/${page.pageSlug}`;
+  const fullUrl = `${origin}/${page.brandSlug}/${page.pageSlug}`;
 
   return (
     <div className="relative pb-24 min-h-full">

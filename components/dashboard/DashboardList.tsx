@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Settings, FileText, Trash2, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { deletePageAction } from "@/app/actions/page.actions";
@@ -40,6 +40,11 @@ export function DashboardList({ pages }: { pages: any[] }) {
     }
   };
 
+  const [host, setHost] = useState("");
+  useEffect(() => {
+    setHost(window.location.host);
+  }, []);
+
   if (pages.length === 0) {
     return (
       <div className="col-span-1 md:col-span-12 bg-white rounded-2xl border border-slate-200 p-12 flex flex-col items-center justify-center shadow-sm text-center">
@@ -74,7 +79,7 @@ export function DashboardList({ pages }: { pages: any[] }) {
                 <div className="flex-grow min-w-0">
                   <h4 className="font-bold text-slate-900 truncate">{page.productName || "Tanpa Judul"}</h4>
                   <p className="text-xs text-slate-500 truncate mt-0.5">
-                    {page.status === 'published' ? `lynksell.id/${page.fullSlug}` : "Draft belum dipublikasikan"}
+                    {page.status === 'published' ? `${host}/${page.fullSlug}` : "Draft belum dipublikasikan"}
                   </p>
                 </div>
                 <div className="text-right hidden sm:block shrink-0 px-4 border-r border-slate-200">

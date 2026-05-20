@@ -4,14 +4,21 @@ import Link from "next/link";
 import { LogOut, Copy, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Logo } from "@/components/ui/logo";
 
 export function DashboardHeader({ user }: { user: any }) {
   const [copied, setCopied] = useState(false);
+  const [host, setHost] = useState("");
+  const [origin, setOrigin] = useState("");
 
-  const brandUrl = typeof window !== "undefined" ? `${window.location.host}/${user?.brandSlug}` : `lynksell.id/${user?.brandSlug}`;
+  useEffect(() => {
+    setHost(window.location.host);
+    setOrigin(window.location.origin);
+  }, []);
+
+  const brandUrl = origin ? `${origin}/${user?.brandSlug}` : `/${user?.brandSlug}`;
 
   const copyUrl = () => {
     if (!user?.brandSlug) return;
@@ -40,7 +47,7 @@ export function DashboardHeader({ user }: { user: any }) {
               className="flex items-center text-xs text-gray-500 hover:text-primary transition-colors"
               title="Salin URL Toko"
             >
-              <span className="mr-1 hidden md:block">lynksell.id/{user.brandSlug}</span>
+              <span className="mr-1 hidden md:block">{host}/{user.brandSlug}</span>
               {copied ? (
                 <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
               ) : (

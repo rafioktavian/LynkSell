@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { WizardState } from "./WizardShell";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -17,6 +18,10 @@ export function Step2Details({
   updateState: (s: Partial<WizardState>) => void;
   brandSlug: string;
 }) {
+  const [host, setHost] = useState("");
+  useEffect(() => {
+    setHost(window.location.host);
+  }, []);
 
   // Auto format WA
   const handleWaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,7 +138,7 @@ export function Step2Details({
           <Label htmlFor="customPageSlug">Ubah URL Halaman (Opsional)</Label>
           <div className="flex items-center">
             <span className="bg-neutral-100 text-neutral-500 px-3 py-2 border border-r-0 border-neutral-300 rounded-l-md text-sm">
-              lynksell.id/{brandSlug}/
+              {host}/{brandSlug}/
             </span>
             <Input 
               id="customPageSlug"

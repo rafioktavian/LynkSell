@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Copy, Eye, Pencil, Trash2, ExternalLink, Loader2, CheckCircle2 } from "lucide-react";
@@ -31,9 +31,15 @@ export function PageCard({ page }: { page: any }) {
       })
     : "-";
 
-  const publicUrl = typeof window !== "undefined"
-    ? `${window.location.host}/${page.fullSlug}`
-    : `lynksell.id/${page.fullSlug}`;
+  const [origin, setOrigin] = useState("");
+  const [host, setHost] = useState("");
+  
+  useEffect(() => {
+    setOrigin(window.location.origin);
+    setHost(window.location.host);
+  }, []);
+
+  const publicUrl = origin ? `${origin}/${page.fullSlug}` : `/${page.fullSlug}`;
 
   const copyUrl = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -114,7 +120,7 @@ export function PageCard({ page }: { page: any }) {
             {page.status === "published" && (
               <div className="mt-3 flex items-center bg-gray-50 border border-gray-200 rounded-md py-1.5 px-3 max-w-max self-start cursor-pointer hover:bg-gray-100 transition-colors" onClick={copyUrl}>
                 <span className="text-xs font-medium text-gray-600 truncate mr-2">
-                  lynksell.id/{page.fullSlug}
+                  {host}/{page.fullSlug}
                 </span>
                 {copied ? (
                   <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
