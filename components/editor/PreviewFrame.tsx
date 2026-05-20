@@ -4,11 +4,18 @@ import { useState, useMemo, useEffect } from "react";
 import { Copy, ExternalLink, Monitor, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { renderToString } from 'react-dom/server';
+import { createRoot } from 'react-dom/client';
+import { flushSync } from 'react-dom';
 import { LandingPageRenderer } from "../landing/LandingPageRenderer";
 
 function generateHTML(page: any) {
-  const reactHtml = renderToString(<LandingPageRenderer page={page} />);
+  const div = document.createElement("div");
+  const root = createRoot(div);
+  flushSync(() => {
+    root.render(<LandingPageRenderer page={page} />);
+  });
+  const reactHtml = div.innerHTML;
+  setTimeout(() => root.unmount(), 0);
 
   return `
 <!DOCTYPE html>
