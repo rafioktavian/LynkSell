@@ -13,9 +13,9 @@ export function EditorShell({ pageData }: { pageData: any }) {
   };
 
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-white">
+    <div className="flex flex-1 w-full overflow-hidden bg-white relative">
       {/* Mobile Tabs */}
-      <div className="lg:hidden fixed top-16 left-0 right-0 z-40 flex bg-white border-b">
+      <div className="lg:hidden absolute top-0 left-0 right-0 z-40 flex bg-white border-b">
         <button
           className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${
             activeTab === "editor" ? "border-blue-600 text-blue-600" : "border-transparent text-neutral-500"

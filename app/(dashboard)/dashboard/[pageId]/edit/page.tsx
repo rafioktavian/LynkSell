@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { redirect, notFound } from 'next/navigation';
 import { EditorShell } from '@/components/editor/EditorShell';
 import { getAdminDb } from '@/lib/firebase-admin';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 
 export default async function EditPage({ params }: { params: Promise<{ pageId: string }> }) {
   const { pageId } = await params;
@@ -11,6 +12,7 @@ export default async function EditPage({ params }: { params: Promise<{ pageId: s
   if (!session?.user?.id) redirect('/login');
 
   let pageData: any = null;
+  let userData: any = { brandName: session.user?.name, brandSlug: 'demo-brand' };
 
   if (isDemo) {
     const { DEMO_PAGES } = await import('@/lib/constants');
@@ -38,6 +40,9 @@ export default async function EditPage({ params }: { params: Promise<{ pageId: s
       updatedAt: rawData?.updatedAt?.toMillis ? rawData.updatedAt.toMillis() : rawData?.updatedAt,
       publishedAt: rawData?.publishedAt?.toMillis ? rawData.publishedAt.toMillis() : rawData?.publishedAt,
     } as any;
+
+    const userDoc = await db.collection('users').doc(session.user.id).get();
+    userData = userDoc.data() || {};
   }
 
   // Cek kepemilikan
@@ -45,8 +50,12 @@ export default async function EditPage({ params }: { params: Promise<{ pageId: s
     redirect('/dashboard');
   }
 
+  // Gabungkan user info
+  const combinedUser = { ...session.user, ...userData };
+
   return (
-    <div className="min-h-screen bg-slate-50 flex overflow-hidden">
+    <div className="w-full min-h-screen bg-slate-50 flex flex-col font-sans overflow-hidden">
+       <DashboardHeader user={combinedUser} backLink="/dashboard" />
        <EditorShell pageData={pageData} />
     </div>
   );

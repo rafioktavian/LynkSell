@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, Copy, CheckCircle2 } from "lucide-react";
+import { LogOut, Copy, CheckCircle2, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Logo } from "@/components/ui/logo";
 
-export function DashboardHeader({ user }: { user: any }) {
+export function DashboardHeader({ user, backLink }: { user: any, backLink?: string }) {
   const [copied, setCopied] = useState(false);
   const [host, setHost] = useState("");
   const [origin, setOrigin] = useState("");
@@ -29,12 +29,27 @@ export function DashboardHeader({ user }: { user: any }) {
   };
 
   return (
-    <header className="w-full bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10 shrink-0 sticky top-0">
-      <div className="flex items-center gap-6">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <Logo className="w-8 h-8 text-primary" />
-          <span className="font-bold text-xl text-primary tracking-tight">LynkSell</span>
+    <header className="w-full bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between z-10 shrink-0 sticky top-0">
+      <div className="flex items-center gap-4 sm:gap-6">
+        {backLink && (
+          <div className="flex items-center sm:border-r sm:border-gray-200 pr-2 sm:pr-6">
+            <Link href={backLink} className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors bg-gray-100 hover:bg-gray-200 sm:bg-transparent sm:hover:bg-transparent px-3 py-1.5 sm:p-0 rounded-md sm:rounded-none">
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-1" />
+              <span className="inline font-semibold">Kembali</span>
+            </Link>
+          </div>
+        )}
+        <Link href="/dashboard" className="flex items-center gap-2 hidden sm:flex">
+          <Logo className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
+          <span className="font-bold text-lg sm:text-xl text-primary tracking-tight">LynkSell</span>
         </Link>
+        
+        {/* Mobile Logo */}
+        {!backLink && (
+          <Link href="/dashboard" className="flex sm:hidden items-center gap-2">
+            <Logo className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
+          </Link>
+        )}
         
         {user?.brandSlug && (
           <div className="hidden sm:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full py-1.5 px-3">
