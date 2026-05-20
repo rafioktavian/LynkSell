@@ -49,7 +49,7 @@ export default function PrivacyPage() {
             <p>Anda berhak untuk mengakses, mengubah nama pengguna, atau meminta penghapusan akun beserta seluruh data halaman mendarat (landing pages) jika Anda tidak lagi ingin menggunakan layanan ini. Permintaan penghapusan dapat diajukan ke kami.</p>
 
             <hr className="my-10 border-slate-200" />
-            <p>Apabila Anda memiliki kekhawatiran tentang kebijakan ini, Anda dapat berbicara dengan tim pengembangan melalui kontak <strong className="text-slate-900">arospace96@gmail.com</strong>.</p>
+            <p>Apabila Anda memiliki kekhawatiran tentang kebijakan ini, Anda dapat berbicara dengan tim pengembangan melalui kontak <strong className="text-slate-900">lynksellid@gmail.com</strong>.</p>
           </div>
         </div>
       </main>

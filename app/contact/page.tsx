@@ -39,11 +39,11 @@ export default function ContactPage() {
               
               <div className="space-y-4 mt-auto">
                 <a 
-                  href="mailto:arospace96@gmail.com" 
+                  href="mailto:lynksellid@gmail.com" 
                   className="inline-flex items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3.5 px-6 rounded-xl transition-all shadow-sm"
                 >
                   <Mail className="w-5 h-5 mr-3" />
-                  arospace96@gmail.com
+                  lynksellid@gmail.com
                 </a>
                 <a 
                   href="https://wa.me/6289614300254" 

@@ -46,7 +46,7 @@ export default function TermsPage() {
             <p>Kami mungkin akan memperbarui halaman Syarat & Ketentuan ini sesekali. Kami akan menginformasikan perubahan melalui pemberitahuan di dalam platform. Penggunaan layanan secara berkelanjutan berarti Anda menyetujui perubahan tersebut.</p>
 
             <hr className="my-10 border-slate-200" />
-            <p>Apabila Anda memiliki pertanyaan mengenai Syarat & Ketentuan ini, silakan hubungi kami di <strong className="text-slate-900">arospace96@gmail.com</strong>.</p>
+            <p>Apabila Anda memiliki pertanyaan mengenai Syarat & Ketentuan ini, silakan hubungi kami di <strong className="text-slate-900">lynksellid@gmail.com</strong>.</p>
           </div>
         </div>
       </main>
