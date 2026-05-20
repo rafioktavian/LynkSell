@@ -229,7 +229,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                 </div>
                 <div>
                   <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
-                  <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
+                  <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
                     <Upload className="w-4 h-4 mr-2" />
                     {isUploading ? "Mengunggah..." : "Ganti Foto"}
                   </Button>
@@ -257,7 +257,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
            <div className="space-y-4">
             <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-between">
               <span className="text-sm font-medium text-blue-900 break-all mr-2">{publishedUrl}</span>
-              <Button size="icon" variant="ghost" className="h-8 w-8 text-blue-700" onClick={() => {
+              <Button type="button" size="icon" variant="ghost" className="h-8 w-8 text-blue-700" onClick={() => {
                 navigator.clipboard.writeText(fullUrl);
                 toast.success("Link disalin!");
               }}>
@@ -281,27 +281,45 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
 
         {/* SECTION 3 - Tampilan */}
         <AccordionSection title="3. Tema Warna Tampilan" isOpen={openSection === 2} onToggle={() => toggleSection(2)}>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-2">
              {[
                { id: 'elegant', text: 'Elegant', colors: ['bg-slate-900', 'bg-slate-100'] },
-               { id: 'bold', text: 'Bold', colors: ['bg-indigo-600', 'bg-indigo-50'] },
+               { id: 'bold', text: 'Bold', colors: ['bg-orange-600', 'bg-orange-50'] },
                { id: 'fresh', text: 'Fresh', colors: ['bg-emerald-600', 'bg-emerald-50'] },
-               { id: 'luxury', text: 'Luxury', colors: ['bg-amber-600', 'bg-black'] }
-             ].map((theme) => (
-                <button
-                  key={theme.id}
-                  onClick={() => setFormData({...formData, colorScheme: theme.id})}
-                  className={`flex flex-col items-center gap-2 p-3 border rounded-lg transition-all ${
-                    formData.colorScheme === theme.id ? "ring-2 ring-blue-600 border-blue-600 bg-blue-50" : "hover:bg-neutral-50"
-                  }`}
-                >
-                   <div className="flex w-12 h-6 rounded-full overflow-hidden border">
-                     <div className={`flex-1 ${theme.colors[0]}`} />
-                     <div className={`flex-1 ${theme.colors[1]}`} />
-                   </div>
-                   <span className="text-xs font-medium">{theme.text}</span>
-                </button>
-             ))}
+               { id: 'luxury', text: 'Luxury', colors: ['bg-violet-600', 'bg-black'] }
+             ].map((theme) => {
+                const isSelected = formData.colorScheme === theme.id;
+                return (
+                  <button
+                    type="button"
+                    key={theme.id}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setFormData({...formData, colorScheme: theme.id});
+                    }}
+                    className={`relative flex flex-col items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
+                      isSelected 
+                        ? "border-blue-600 bg-blue-50/50 shadow-md transform scale-[1.02]" 
+                        : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50 hover:shadow-sm"
+                    }`}
+                  >
+                     {/* Checkmark indicator for selected state */}
+                     {isSelected && (
+                       <div className="absolute -top-3 -right-3 bg-blue-600 text-white rounded-full p-1 shadow-sm border-2 border-white">
+                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                       </div>
+                     )}
+                     
+                     <div className="flex w-full h-16 rounded-lg overflow-hidden border shadow-inner">
+                       <div className={`flex-[2] ${theme.colors[0]}`} />
+                       <div className={`flex-[1] ${theme.colors[1]}`} />
+                     </div>
+                     <span className={`text-sm font-bold ${isSelected ? 'text-blue-700' : 'text-neutral-700'}`}>
+                       {theme.text}
+                     </span>
+                  </button>
+                );
+             })}
           </div>
         </AccordionSection>
 
@@ -331,14 +349,14 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                       <Input value={pt} onChange={(e) => {
                         const newArr = [...painPoints]; newArr[i] = e.target.value; setPainPoints(newArr);
                       }} />
-                      <Button variant="ghost" size="icon" className="text-red-500 h-9 w-9 flex-shrink-0" onClick={() => {
+                      <Button type="button" variant="ghost" size="icon" className="text-red-500 h-9 w-9 flex-shrink-0" onClick={() => {
                         const newArr = painPoints.filter((_, idx) => idx !== i); setPainPoints(newArr);
                       }}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   ))}
-                  <Button variant="outline" size="sm" className="w-full" onClick={() => setPainPoints([...painPoints, ""])}>
+                  <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => setPainPoints([...painPoints, ""])}>
                     <Plus className="w-4 h-4 mr-2" /> Tambah 1 Masalah
                   </Button>
                </div>
@@ -352,7 +370,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                   <Label>Manfaat (Benefits)</Label>
                   {benefits.map((b, i) => (
                     <div key={i} className="bg-neutral-50 p-3 rounded-lg border space-y-2 relative">
-                      <Button variant="ghost" size="icon" className="absolute top-1 right-1 text-red-500 h-6 w-6" onClick={() => {
+                      <Button type="button" variant="ghost" size="icon" className="absolute top-1 right-1 text-red-500 h-6 w-6" onClick={() => {
                         const newArr = benefits.filter((_, idx) => idx !== i); setBenefits(newArr);
                       }}>
                         <Trash2 className="w-4 h-4" />
@@ -370,7 +388,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                       }} rows={2} className="text-sm" />
                     </div>
                   ))}
-                  <Button variant="outline" size="sm" className="w-full" onClick={() => setBenefits([...benefits, { icon: "✅", title: "", desc: "" }])}>
+                  <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => setBenefits([...benefits, { icon: "✅", title: "", desc: "" }])}>
                     <Plus className="w-4 h-4 mr-2" /> Tambah Manfaat
                   </Button>
                </div>
@@ -403,6 +421,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
       {/* STICKY BOTTOM BAR */}
       <div className="absolute bottom-0 left-0 w-full bg-white border-t p-3 lg:p-4 flex flex-col sm:flex-row gap-2 z-10 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
         <Button 
+          type="button"
           onClick={handleSave} 
           disabled={isPending} 
           variant="outline" 
@@ -411,6 +430,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
           <Save className="w-4 h-4 mr-2" /> Simpan Draft
         </Button>
         <Button 
+          type="button"
           onClick={handlePublish} 
           disabled={isPending || (page.status === 'published' && formData.pageSlug === page.pageSlug)} 
           className="flex-1 bg-black hover:bg-neutral-800 text-white"
@@ -435,7 +455,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
             </p>
             <div className="w-full bg-neutral-100 p-3 rounded-lg border flex items-center justify-between mt-2">
                <span className="font-medium text-sm truncate pr-2">https://{publishedUrl}</span>
-               <Button size="sm" onClick={() => {
+               <Button type="button" size="sm" onClick={() => {
                  navigator.clipboard.writeText(fullUrl);
                  toast.success("Link berhasil disalin!");
                }}>
@@ -443,8 +463,8 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                </Button>
             </div>
             <div className="flex w-full gap-2 mt-4">
-               <Button variant="outline" className="flex-1" onClick={() => setShowCelebration(false)}>Tutup</Button>
-               <Button className="flex-1 bg-green-600 hover:bg-green-700 text-white" onClick={() => window.open(fullUrl, "_blank")}>
+               <Button type="button" variant="outline" className="flex-1" onClick={() => setShowCelebration(false)}>Tutup</Button>
+               <Button type="button" className="flex-1 bg-green-600 hover:bg-green-700 text-white" onClick={() => window.open(fullUrl, "_blank")}>
                  Buka Halaman
                </Button>
             </div>

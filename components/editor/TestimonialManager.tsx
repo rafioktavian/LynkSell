@@ -196,18 +196,18 @@ export function TestimonialManager({ page, onUpdateLocal }: { page: any, onUpdat
               {/* Action Buttons */}
               <div className="absolute top-3 right-3 flex flex-col gap-1 items-center">
                 <div className="flex flex-col bg-white border rounded shadow-sm overflow-hidden mb-1">
-                  <button disabled={isPending} onClick={() => handleMove(idx, 'up')} className="p-1 hover:bg-neutral-100 disabled:opacity-30 border-b">
+                  <button type="button" disabled={isPending} onClick={() => handleMove(idx, 'up')} className="p-1 hover:bg-neutral-100 disabled:opacity-30 border-b">
                       <ChevronUp className="w-4 h-4 text-neutral-600" />
                   </button>
-                  <button disabled={isPending} onClick={() => handleMove(idx, 'down')} className="p-1 hover:bg-neutral-100 disabled:opacity-30">
+                  <button type="button" disabled={isPending} onClick={() => handleMove(idx, 'down')} className="p-1 hover:bg-neutral-100 disabled:opacity-30">
                       <ChevronDown className="w-4 h-4 text-neutral-600" />
                   </button>
                 </div>
                 <div className="flex gap-1">
-                   <button disabled={isPending} onClick={() => openEditModal(t)} className="p-1.5 hover:bg-blue-50 text-blue-600 rounded">
+                   <button type="button" disabled={isPending} onClick={() => openEditModal(t)} className="p-1.5 hover:bg-blue-50 text-blue-600 rounded">
                       <Edit2 className="w-3.5 h-3.5" />
                    </button>
-                   <button disabled={isPending} onClick={() => handleRemove(t.id)} className="p-1.5 hover:bg-red-50 text-red-600 rounded">
+                   <button type="button" disabled={isPending} onClick={() => handleRemove(t.id)} className="p-1.5 hover:bg-red-50 text-red-600 rounded">
                       <Trash2 className="w-3.5 h-3.5" />
                    </button>
                 </div>
@@ -218,10 +218,10 @@ export function TestimonialManager({ page, onUpdateLocal }: { page: any, onUpdat
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2 pt-2">
-        <Button variant="outline" className="flex-1 border-dashed bg-white border-neutral-300 hover:border-neutral-400" onClick={openAddModal}>
+        <Button type="button" variant="outline" className="flex-1 border-dashed bg-white border-neutral-300 hover:border-neutral-400" onClick={openAddModal}>
           <Plus className="w-4 h-4 mr-2" /> Tambah Manual
         </Button>
-        <Button variant="outline" className="flex-1 bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100 hover:text-purple-800" onClick={handleGenerateAI} disabled={isPending}>
+        <Button type="button" variant="outline" className="flex-1 bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100 hover:text-purple-800" onClick={handleGenerateAI} disabled={isPending}>
           <Sparkles className="w-4 h-4 mr-2" /> Generate Ulang AI
         </Button>
       </div>
@@ -244,7 +244,7 @@ export function TestimonialManager({ page, onUpdateLocal }: { page: any, onUpdat
               <label className="text-sm font-medium">Penilaian (Bintang)</label>
               <div className="flex items-center gap-2 bg-neutral-50 border p-2 rounded-lg w-max">
                 {[1, 2, 3, 4, 5].map(r => (
-                    <button key={r} onClick={() => setFormData(f => ({ ...f, rating: r }))} className={r <= formData.rating ? 'text-amber-400' : 'text-neutral-300'}>
+                    <button type="button" key={r} onClick={() => setFormData(f => ({ ...f, rating: r }))} className={r <= formData.rating ? 'text-amber-400' : 'text-neutral-300'}>
                         <Star className="w-6 h-6 fill-current hover:scale-110 transition-transform" />
                     </button>
                 ))}
@@ -259,8 +259,8 @@ export function TestimonialManager({ page, onUpdateLocal }: { page: any, onUpdat
             </div>
           </div>
           <div className="flex gap-2 justify-end">
-            <Button variant="ghost" onClick={closeModal} disabled={isPending}>Batal</Button>
-            <Button onClick={handleAddOrEdit} disabled={isPending || !formData.name || !formData.text} className="bg-black text-white px-8">Sempan Testimoni</Button>
+            <Button type="button" variant="ghost" onClick={closeModal} disabled={isPending}>Batal</Button>
+            <Button type="button" onClick={handleAddOrEdit} disabled={isPending || !formData.name || !formData.text} className="bg-black text-white px-8">Simpan Testimoni</Button>
           </div>
         </DialogContent>
       </Dialog>

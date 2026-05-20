@@ -163,9 +163,22 @@ export function Step1Upload({
                />
              </div>
              
-             <div className="flex flex-wrap gap-2">
-                 <Badge variant="secondary">{state.analysisResult.category}</Badge>
-                 <Badge variant="outline" className="text-neutral-500">Target: {state.analysisResult.targetPembeli}</Badge>
+             <div className="space-y-1.5">
+               <Label htmlFor="analysis_category">Kategori Produk</Label>
+               <Input 
+                 id="analysis_category" 
+                 value={state.analysisResult.category} 
+                 onChange={(e) => updateState({ analysisResult: { ...state.analysisResult, category: e.target.value }})}
+               />
+             </div>
+
+             <div className="space-y-1.5">
+               <Label htmlFor="analysis_targetPembeli">Target Pembeli</Label>
+               <Input 
+                 id="analysis_targetPembeli" 
+                 value={state.analysisResult.targetPembeli} 
+                 onChange={(e) => updateState({ analysisResult: { ...state.analysisResult, targetPembeli: e.target.value }})}
+               />
              </div>
              
              <div className="text-sm text-neutral-600 bg-white p-3 rounded border border-neutral-200 break-all">

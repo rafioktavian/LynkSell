@@ -19,20 +19,24 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const fileElement = formData.get('file');
 
-    if (!fileElement || !(fileElement instanceof Blob)) {
-      return NextResponse.json({ success: false, error: 'Gagal upload. Coba lagi.' }, { status: 400 });
+    if (!fileElement) {
+      return NextResponse.json({ success: false, error: 'No fileElement in formData' }, { status: 400 });
+    }
+    
+    if (typeof fileElement === 'string') {
+      return NextResponse.json({ success: false, error: 'fileElement is a string, not a file' }, { status: 400 });
     }
 
-    const file = fileElement as File;
+    const file = fileElement as unknown as File;
 
-    if (!file.type.startsWith('image/')) {
-      return NextResponse.json({ success: false, error: 'Gagal upload. Coba lagi.' }, { status: 400 });
+    if (!file.type || !file.type.startsWith('image/')) {
+      return NextResponse.json({ success: false, error: `Invalid file type: ${file.type}` }, { status: 400 });
     }
 
     // size max 5MB
     const MAX_SIZE = 5 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
-      return NextResponse.json({ success: false, error: 'Gagal upload. Coba lagi.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'File size exceeds 5MB' }, { status: 400 });
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -41,7 +45,21 @@ export async function POST(req: NextRequest) {
     const filePath = `products/${session.user.id}/${Date.now()}-${sanitizedName}`;
 
     const adminStorage = getAdminStorage();
-    const bucket = adminStorage.bucket();
+    const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+    const bucketName = projectId ? `${projectId}-lynksell` : adminStorage.app.options.storageBucket;
+    
+    if (!bucketName) {
+      throw new Error("No storageBucket configured");
+    }
+
+    const bucket = adminStorage.bucket(bucketName);
+    
+    // Create bucket if it doesn't exist (handle first upload)
+    const [exists] = await bucket.exists();
+    if (!exists) {
+      await bucket.create();
+    }
+
     const bucketFile = bucket.file(filePath);
 
     // Set public: true dan contentType
@@ -54,9 +72,9 @@ export async function POST(req: NextRequest) {
     
     // Return { success: true, data: { url: publicUrl } }
     return NextResponse.json({ success: true, data: { url: publicUrl } });
-  } catch (err) {
+  } catch (err: any) {
     console.error('[LynkSell] /api/upload error:', err);
-    // Jika error → return { success: false, error: 'Gagal upload. Coba lagi.' }
-    return NextResponse.json({ success: false, error: 'Gagal upload. Coba lagi.' }, { status: 500 });
+    // Jika error → return detail error for debugging
+    return NextResponse.json({ success: false, error: err.message || 'Internal Server Error' }, { status: 500 });
   }
 }
