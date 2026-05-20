@@ -88,30 +88,44 @@ export function Step2Details({
           />
         </div>
         
-        <div className="space-y-3">
-          <Label>Tema Warna Halaman</Label>
+        <div className="space-y-4">
+          <Label className="text-base font-semibold">Tema Warna Halaman</Label>
           <RadioGroup 
-             defaultValue={state.colorScheme} 
+             value={state.colorScheme} 
              onValueChange={(val: any) => updateState({ colorScheme: val })}
-             className="grid grid-cols-2 gap-4"
+             className="grid grid-cols-1 sm:grid-cols-2 gap-3"
           >
             {[
-              { id: "elegant", name: "Elegant", desc: "Navy & Merah" },
-              { id: "bold", name: "Bold", desc: "Oranye Solid" },
-              { id: "fresh", name: "Fresh", desc: "Teal cerah" },
-              { id: "luxury", name: "Luxury", desc: "Ungu & Emas" },
-            ].map(scheme => (
-              <div key={scheme.id} className="relative">
-                <RadioGroupItem value={scheme.id} id={scheme.id} className="peer sr-only" />
-                <Label
-                  htmlFor={scheme.id}
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-neutral-200 bg-white p-4 hover:bg-neutral-50 peer-data-[state=checked]:border-neutral-900 peer-data-[state=checked]:bg-neutral-50 cursor-pointer"
+              { id: "elegant", name: "Elegant", desc: "Navy & Merah", color1: "bg-slate-900", color2: "bg-red-600" },
+              { id: "bold", name: "Bold", desc: "Oranye Solid", color1: "bg-orange-600", color2: "bg-orange-500" },
+              { id: "fresh", name: "Fresh", desc: "Teal cerah", color1: "bg-teal-600", color2: "bg-lime-400" },
+              { id: "luxury", name: "Luxury", desc: "Ungu & Emas", color1: "bg-purple-900", color2: "bg-amber-400" },
+            ].map(scheme => {
+              const isChecked = state.colorScheme === scheme.id;
+              return (
+                <div 
+                  key={scheme.id} 
+                  onClick={() => updateState({ colorScheme: scheme.id as any })}
+                  className={`flex items-center justify-between rounded-xl border-2 p-4 cursor-pointer transition-all ${
+                    isChecked 
+                      ? "border-neutral-900 bg-neutral-50 shadow-sm" 
+                      : "border-neutral-200 bg-white hover:border-neutral-300"
+                  }`}
                 >
-                  <span className="font-medium">{scheme.name}</span>
-                  <span className="text-xs text-neutral-500 mt-1">{scheme.desc}</span>
-                </Label>
-              </div>
-            ))}
+                  <div className="flex items-center space-x-3">
+                    <RadioGroupItem value={scheme.id} id={scheme.id} />
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-neutral-900 text-sm leading-none">{scheme.name}</span>
+                      <span className="text-xs text-neutral-500 mt-1.5 leading-none">{scheme.desc}</span>
+                    </div>
+                  </div>
+                  <div className="flex -space-x-1">
+                    <div className={`w-5 h-5 rounded-full border border-white shadow-sm ${scheme.color1}`}></div>
+                    <div className={`w-5 h-5 rounded-full border border-white shadow-sm ${scheme.color2}`}></div>
+                  </div>
+                </div>
+              );
+            })}
           </RadioGroup>
         </div>
 

@@ -30,7 +30,14 @@ export default async function EditPage({ params }: { params: Promise<{ pageId: s
       notFound();
     }
 
-    pageData = { id: pageDoc.id, ...pageDoc.data() } as any;
+    const rawData = pageDoc.data();
+    pageData = { 
+      id: pageDoc.id, 
+      ...rawData,
+      createdAt: rawData?.createdAt?.toMillis ? rawData.createdAt.toMillis() : rawData?.createdAt,
+      updatedAt: rawData?.updatedAt?.toMillis ? rawData.updatedAt.toMillis() : rawData?.updatedAt,
+      publishedAt: rawData?.publishedAt?.toMillis ? rawData.publishedAt.toMillis() : rawData?.publishedAt,
+    } as any;
   }
 
   // Cek kepemilikan

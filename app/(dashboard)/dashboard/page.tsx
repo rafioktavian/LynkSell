@@ -44,7 +44,16 @@ export default async function DashboardPage() {
       .orderBy('createdAt', 'desc')
       .get();
 
-    pages = pagesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    pages = pagesSnap.docs.map(doc => {
+      const data = doc.data();
+      return { 
+        id: doc.id, 
+        ...data,
+        createdAt: data.createdAt?.toMillis ? data.createdAt.toMillis() : data.createdAt,
+        updatedAt: data.updatedAt?.toMillis ? data.updatedAt.toMillis() : data.updatedAt,
+        publishedAt: data.publishedAt?.toMillis ? data.publishedAt.toMillis() : data.publishedAt,
+      };
+    });
   }
 
   const stats = {

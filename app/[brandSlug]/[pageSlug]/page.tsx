@@ -17,7 +17,15 @@ async function getPublishedPage(fullSlug: string): Promise<any> {
     .limit(1)
     .get();
     
-  return snap.empty ? null : { id: snap.docs[0].id, ...snap.docs[0].data() };
+  if (snap.empty) return null;
+  const rawData = snap.docs[0].data();
+  return {
+    id: snap.docs[0].id,
+    ...rawData,
+    createdAt: rawData.createdAt?.toMillis ? rawData.createdAt.toMillis() : rawData.createdAt,
+    updatedAt: rawData.updatedAt?.toMillis ? rawData.updatedAt.toMillis() : rawData.updatedAt,
+    publishedAt: rawData.publishedAt?.toMillis ? rawData.publishedAt.toMillis() : rawData.publishedAt,
+  };
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ brandSlug: string, pageSlug: string }> }): Promise<Metadata> {
