@@ -289,7 +289,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
 
         {/* SECTION 3 - Tampilan */}
         <AccordionSection title="3. Tema Warna Tampilan" isOpen={openSection === 2} onToggle={() => toggleSection(2)}>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-2">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 p-2">
              {[
                { id: 'elegant', text: 'Elegant', colors: ['bg-slate-900', 'bg-slate-100'] },
                { id: 'bold', text: 'Bold', colors: ['bg-orange-600', 'bg-orange-50'] },
@@ -328,6 +328,55 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                   </button>
                 );
              })}
+
+             {/* Custom Color Option */}
+             {(() => {
+                const isCustom = formData.colorScheme?.startsWith('#');
+                const customHex = isCustom ? formData.colorScheme : '#3b82f6';
+                
+                return (
+                  <div className="relative flex flex-col items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (!isCustom) setFormData({...formData, colorScheme: customHex});
+                      }}
+                      className={`relative w-full flex flex-col items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
+                        isCustom 
+                          ? "border-blue-600 bg-blue-50/50 shadow-md transform scale-[1.02]" 
+                          : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50 hover:shadow-sm"
+                      }`}
+                    >
+                       {isCustom && (
+                         <div className="absolute -top-3 -right-3 bg-blue-600 text-white rounded-full p-1 shadow-sm border-2 border-white z-10">
+                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                         </div>
+                       )}
+                       
+                       <div className="flex w-full h-16 rounded-lg overflow-hidden border shadow-inner relative group">
+                         <input
+                           type="color"
+                           value={customHex}
+                           onChange={(e) => {
+                             setFormData({...formData, colorScheme: e.target.value});
+                           }}
+                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                           title="Pilih Warna"
+                         />
+                         <div className="flex-[2] transition-colors" style={{ backgroundColor: customHex }} />
+                         <div className="flex-[1] transition-colors" style={{ backgroundColor: customHex + '1A' }} />
+                       </div>
+                       <span className={`text-sm font-bold ${isCustom ? 'text-blue-700' : 'text-neutral-700'}`}>
+                         Custom
+                       </span>
+                    </button>
+                    {isCustom && (
+                       <span className="text-xs text-neutral-500 uppercase font-mono">{customHex}</span>
+                    )}
+                  </div>
+                );
+             })()}
           </div>
         </AccordionSection>
 

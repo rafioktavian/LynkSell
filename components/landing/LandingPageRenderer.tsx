@@ -53,14 +53,18 @@ export function LandingPageRenderer({ page }: Props) {
   const c = page.copyData || {};
   const t = page.testimonials || [];
   
+  const isCustomColor = page.colorScheme?.startsWith('#');
+  const customHex = isCustomColor ? page.colorScheme : null;
+
   const allColors = {
     elegant: { bg: 'bg-white', primary: 'bg-slate-900', textPrimary: 'text-slate-900', secondary: 'bg-slate-100', textSecondary: 'text-slate-600', button: 'bg-slate-900', buttonHover: 'hover:bg-slate-800' },
     bold: { bg: 'bg-white', primary: 'bg-indigo-600', textPrimary: 'text-indigo-900', secondary: 'bg-indigo-50', textSecondary: 'text-indigo-600', button: 'bg-indigo-600', buttonHover: 'hover:bg-indigo-700' },
     fresh: { bg: 'bg-white', primary: 'bg-emerald-600', textPrimary: 'text-emerald-900', secondary: 'bg-emerald-50', textSecondary: 'text-emerald-700', button: 'bg-emerald-600', buttonHover: 'hover:bg-emerald-700' },
     luxury: { bg: 'bg-neutral-50', primary: 'bg-amber-600', textPrimary: 'text-amber-900', secondary: 'bg-black', textSecondary: 'text-amber-700', button: 'bg-black', buttonHover: 'hover:bg-neutral-800' },
+    custom: { bg: 'bg-white', primary: 'bg-[var(--custom-primary)]', textPrimary: 'text-[var(--custom-primary)]', secondary: 'bg-[var(--custom-secondary)]', textSecondary: 'text-[var(--custom-primary)]', button: 'bg-[var(--custom-primary)]', buttonHover: 'hover:brightness-90 transition-all' }
   };
   
-  const colors = allColors[page.colorScheme as keyof typeof allColors] || allColors['elegant'];
+  const colors = isCustomColor ? allColors.custom : (allColors[page.colorScheme as keyof typeof allColors] || allColors['elegant']);
 
   const waLink = page.whatsappNumber 
     ? `https://wa.me/${page.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(c.whatsapp_message || 'Halo!')}`
@@ -73,7 +77,13 @@ export function LandingPageRenderer({ page }: Props) {
         .font-dm { font-family: 'DM Sans', sans-serif; }
         .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
       `}} />
-      <div className={`font-dm antialiased ${colors.bg} text-neutral-800 selection:bg-black selection:text-white min-h-screen pb-20 sm:pb-0`}>
+      <div 
+         className={`font-dm antialiased ${colors.bg} text-neutral-800 selection:bg-black selection:text-white min-h-screen pb-20 sm:pb-0`}
+         style={isCustomColor ? { 
+           '--custom-primary': customHex, 
+           '--custom-secondary': customHex + '1A' 
+         } as React.CSSProperties : undefined}
+      >
         
         {/* Hero Section */}
         <section className="w-full flex-col md:flex-row flex items-center md:items-start justify-center gap-8 py-10 px-4 md:px-8 max-w-5xl mx-auto">
