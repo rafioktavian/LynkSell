@@ -1,12 +1,7 @@
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
+import "./.next/types/routes.d.ts";
+import "./.next/types/root-params.d.ts";
 
 // NOTE: This file should not be edited
-// see https://nextjs.org/docs/app/building-your-application/configuring/typescript for more information.
-
-declare module 'next/cache' {
-  export * from 'next/dist/server/web/spec-extension/revalidate';
-  
-  // Override revalidateTag to support 2 arguments
-  export function revalidateTag(tag: string, profile?: string): void;
-}
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.

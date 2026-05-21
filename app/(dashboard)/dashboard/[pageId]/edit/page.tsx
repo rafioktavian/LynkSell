@@ -42,7 +42,12 @@ export default async function EditPage({ params }: { params: Promise<{ pageId: s
     } as any;
 
     const userDoc = await db.collection('users').doc(session.user.id).get();
-    userData = userDoc.data() || {};
+    const rawUserData = userDoc.data() || {};
+    userData = {
+      ...rawUserData,
+      createdAt: rawUserData?.createdAt?.toMillis ? rawUserData.createdAt.toMillis() : rawUserData?.createdAt,
+      updatedAt: rawUserData?.updatedAt?.toMillis ? rawUserData.updatedAt.toMillis() : rawUserData?.updatedAt,
+    };
   }
 
   // Cek kepemilikan

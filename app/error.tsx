@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
@@ -18,12 +17,18 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Terjadi Kesalahan</h1>
         <p className="text-slate-500 mb-8 whitespace-pre-wrap">{error.message || "Mohon maaf, halaman tidak dapat dimuat."}</p>
         <div className="flex gap-4 justify-center">
-          <Button onClick={() => reset()} variant="default">
+          <button 
+            onClick={() => reset()} 
+            className="px-4 py-2 bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors"
+          >
             Coba Lagi
-          </Button>
-          <Button onClick={() => window.location.href = '/'} variant="outline">
+          </button>
+          <button 
+            onClick={() => window.location.href = '/'} 
+            className="px-4 py-2 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors"
+          >
             Kembali ke Beranda
-          </Button>
+          </button>
         </div>
       </div>
     </div>
