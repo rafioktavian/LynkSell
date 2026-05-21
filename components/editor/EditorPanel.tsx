@@ -336,11 +336,11 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                 
                 return (
                   <div className="relative flex flex-col items-center gap-2">
-                    <button
-                      type="button"
+                    <div
                       onClick={(e) => {
-                        e.preventDefault();
-                        if (!isCustom) setFormData({...formData, colorScheme: customHex});
+                        if (!isCustom) {
+                          setFormData({...formData, colorScheme: customHex});
+                        }
                       }}
                       className={`relative w-full flex flex-col items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
                         isCustom 
@@ -361,6 +361,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                            onChange={(e) => {
                              setFormData({...formData, colorScheme: e.target.value});
                            }}
+                           onClick={(e) => e.stopPropagation()}
                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                            title="Pilih Warna"
                          />
@@ -370,7 +371,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                        <span className={`text-sm font-bold ${isCustom ? 'text-blue-700' : 'text-neutral-700'}`}>
                          Custom
                        </span>
-                    </button>
+                    </div>
                     {isCustom && (
                        <span className="text-xs text-neutral-500 uppercase font-mono">{customHex}</span>
                     )}
