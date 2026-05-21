@@ -31,18 +31,19 @@ export function DashboardHeader({ user, backLink }: { user: any, backLink?: stri
   return (
     <header className="w-full bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between z-10 shrink-0 sticky top-0">
       <div className="flex items-center gap-4 sm:gap-6">
-        {backLink && (
+        {backLink ? (
           <div className="flex items-center sm:border-r sm:border-gray-200 pr-2 sm:pr-6">
             <Link href={backLink} className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors bg-gray-100 hover:bg-gray-200 sm:bg-transparent sm:hover:bg-transparent px-3 py-1.5 sm:p-0 rounded-md sm:rounded-none">
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-1" />
               <span className="inline font-semibold">Kembali</span>
             </Link>
-          </div>
+          </div> ) : (
+          <Link href="/dashboard" className="flex items-center gap-2 hidden sm:flex">
+            <Logo className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
+            <span className="font-bold text-lg sm:text-xl text-primary tracking-tight">LynkSell</span>
+          </Link>
         )}
-        <Link href="/dashboard" className="flex items-center gap-2 hidden sm:flex">
-          <Logo className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
-          <span className="font-bold text-lg sm:text-xl text-primary tracking-tight">LynkSell</span>
-        </Link>
+        
         
         {/* Mobile Logo */}
         {!backLink && (
