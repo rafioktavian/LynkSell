@@ -69,45 +69,20 @@ export default function ContactPage() {
                   LynkSell 100% gratis tanpa potongan untuk penjualanmu. Berikan dukungan donasi seikhlasnya agar kami bisa terus melayani lebih banyak UMKM.
                 </p>
 
-                <div className="bg-white/10 rounded-2xl p-5 backdrop-blur-sm mb-6 space-y-5 text-sm">
-                  <div>
-                    <h3 className="font-semibold text-white/80 mb-3 uppercase text-xs tracking-wider flex items-center">
-                      <span className="w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></span>
-                      E-Wallet
-                    </h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center bg-white/5 p-2 rounded-lg">
-                        <span className="font-medium text-slate-100">OVO</span>
-                        <span className="font-mono font-medium text-indigo-100">+62 896-1430-0254</span>
-                      </div>
-                      <div className="flex justify-between items-center bg-white/5 p-2 rounded-lg">
-                        <span className="font-medium text-slate-100">GoPay</span>
-                        <span className="font-mono font-medium text-indigo-100">+62 896-1430-0254</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border-t border-white/20 pt-5">
-                     <h3 className="font-semibold text-white/80 mb-3 uppercase text-xs tracking-wider flex items-center">
-                      <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></span>
-                      Transfer Bank
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="bg-white/5 p-3 rounded-lg">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="font-medium text-slate-100">BSI</span>
-                          <span className="font-mono font-medium text-indigo-100 tracking-wide text-base">7197063453</span>
-                        </div>
-                        <p className="text-white/60 text-xs text-right">a.n Akhmad Rafi Oktavian</p>
-                      </div>
-                      <div className="bg-white/5 p-3 rounded-lg">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="font-medium text-slate-100">Mandiri</span>
-                          <span className="font-mono font-medium text-indigo-100 tracking-wide text-base">1310014121570</span>
-                        </div>
-                        <p className="text-white/60 text-xs text-right">a.n Akhmad Rafi Oktavian</p>
-                      </div>
-                    </div>
-                  </div>
+                <div className="mb-6 flex flex-col items-center justify-center rounded-2xl bg-white/10 px-6 py-10 backdrop-blur-sm">
+                  <a 
+                    href="https://saweria.co/lynksell" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group relative inline-flex w-full items-center justify-center overflow-hidden rounded-2xl bg-[#FFD700] px-8 py-4 font-bold text-slate-900 shadow-[0_0_40px_-10px_rgba(255,215,0,0.5)] transition-all duration-300 hover:scale-105 hover:bg-[#FFE44D] hover:shadow-[0_0_60px_-15px_rgba(255,215,0,0.6)] active:scale-100"
+                  >
+                    <span className="absolute -left-16 -top-12 h-32 w-12 rotate-[30deg] bg-white opacity-40 blur-[20px] transition-all duration-700 ease-out group-hover:translate-x-[250px]" />
+                    <Heart className="mr-3 h-5 w-5 fill-rose-500 text-rose-500 transition-transform group-hover:scale-110" />
+                    <span className="text-lg">Donate via Saweria</span>
+                  </a>
+                  <p className="mt-6 text-center text-sm text-indigo-100/80">
+                    Berapapun dukunganmu sangat berarti bagi kami ✨
+                  </p>
                 </div>
               </div>
               
