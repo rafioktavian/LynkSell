@@ -112,8 +112,10 @@ export function TestimonialManager({ page, onUpdateLocal }: { page: any, onUpdat
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             productName: page.productName,
+            kategori: page.copyData?.headline || "General",
             targetPembeli: page.targetPembeli || "",
-            copyData: page.copyData || {},
+            harga: page.harga || "",
+            keunggulan: page.copyData?.benefits?.map((b: any) => b.title + ": " + b.desc).join(" | ") || ""
           })
         });
         

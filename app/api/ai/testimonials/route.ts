@@ -19,26 +19,28 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { productName, kategori, targetPembeli, harga } = body;
+    const { productName, kategori, targetPembeli, harga, keunggulan } = body;
 
     const prompt = `Generate 3 testimoni pembeli untuk produk "${productName}" (Kategori: ${kategori}, Harga: ${harga}, Untuk: ${targetPembeli}).
-Saya butuh testimoni yang terdengar SANGAT NATURAL dan MANUSIAWI.
+Informasi keunggulan produk: ${keunggulan || "Tidak ada detail spesifik"}
+
+Saya butuh testimoni yang terdengar SANGAT NATURAL, MANUSIAWI, dan BENAR-BENAR me-review keunggulan/informasi produk tersebut.
 
 ATURAN WAJIB dalam prompt:
+- Testimoni HARUS nyambung dengan "keunggulan produk" dan "nama produk". Ceritakan pengalaman mereka yang merasa terbantu oleh fitur/keunggulan produk.
 - BOLEH pakai singkatan: 'bgt', 'sih', 'ga', 'udah', 'tp', 'krn', 'emg'
-- 3 angle berbeda: kualitas produk / service & pengiriman / harga & value
+- 3 angle berbeda: Misalnya 1 tentang kualitas produk / fungsi produk, 1 tentang service & pengiriman, 1 tentang harga & kenyamanan.
 - Nama Indonesia realistis: campuran gender, bisa pakai inisial ("Rina S.", "Mas Fajar")
 - Kota bervariasi: Jakarta, Surabaya, Medan, Makassar, Semarang, Bandung, Palembang, Yogyakarta
-- HINDARI: "luar biasa", "sangat puas", "produk terbaik" — terlalu generik
-- Detail spesifik relevan ke kategori produk
+- HINDARI: "luar biasa", "sangat puas", "produk terbaik", "kualitas terbaik" — terlalu kaku. Gunakan bahasa kasual sehari-hari (contoh: "mantap", "ternyata beneran enak", "pas banget di aku").
 
-Return JSON array secara MURNI: 
+Return JSON array secara MURNI (tanpa backticks): 
 [
   { 
     "name": "string", 
     "location": "string", 
     "rating": 5, 
-    "text": "string", 
+    "text": "string (komentar panjang 2-3 kalimat yang spesifik menjelaskan pengalaman terkait fitur produk)", 
     "source": "ai" 
   }
 ]`;

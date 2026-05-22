@@ -96,7 +96,8 @@ export function Step3Generating({
               productName: state.analysisResult.productName,
               kategori: state.analysisResult.category,
               targetPembeli: state.analysisResult.targetPembeli,
-              harga: state.harga
+              harga: state.harga,
+              keunggulan: state.keunggulan
             })
           });
           const testiData = await testiRes.json();

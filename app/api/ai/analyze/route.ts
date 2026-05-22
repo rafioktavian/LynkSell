@@ -28,14 +28,23 @@ export async function POST(req: NextRequest) {
     // Hapus data URI prefix jika ada
     const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
 
-    const prompt = `Analisis foto produk e-commerce. Return JSON:
+    const prompt = `Analisis foto produk e-commerce untuk pasar UMKM Indonesia secara mendalam. 
+Anda harus bertindak sebagai copywriter dan product analyst expert. Evaluasi teks atau merek yang ada di dalam gambar dengan cermat.
+
+Tugas Anda:
+1. Identifikasi APA produk ini secara spesifik (jangan generik). Jika ada merek atau nama di kemasan, jadikan ini sebagai "productName".
+2. Identifikasi "category" produk yang tepat (contoh: Kosmetik, Makanan, Minuman, Fashion, Elektronik).
+3. Tentukan "targetPembeli" yang paling logis dan spesifik untuk produk ini (contoh: "Anak muda penyuka pedas", "Ibu rumah tangga").
+4. Identifikasi 3-5 "keunggulan" produk yang terlihat dari gambar atau bisa disimpulkan dengan kuat dari jenis produknya.
+5. Perkirakan "harga" standar di pasar jika memungkinkan, namun Anda dapat mengosongkannya jika ragu.
+
+Return HANYA JSON MURNI dengan format berikut (jangan bungkus dengan backticks):
 { 
-  "nama_produk": "string",
-  "kategori": "string", 
-  "target_pembeli": "string", 
-  "keunggulan_visual": ["string"], 
-  "tone_warna": "string", 
-  "page_slug_suggestion": "string" 
+  "productName": "string spesifik dari info gambar",
+  "category": "string kategori", 
+  "targetPembeli": "string target audiens spesifik", 
+  "keunggulan": ["string", "string", "string"], 
+  "harga": "string (opsional)"
 }`;
 
     const rawText = await callGeminiVision(base64Data, mimeType, prompt);
