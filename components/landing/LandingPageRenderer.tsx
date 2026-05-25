@@ -72,13 +72,8 @@ export function LandingPageRenderer({ page }: Props) {
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap');
-        .font-dm { font-family: 'DM Sans', sans-serif; }
-        .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
-      `}} />
       <div 
-         className={`font-dm antialiased ${colors.bg} text-neutral-800 selection:bg-black selection:text-white min-h-screen pb-20 sm:pb-0`}
+         className={`font-body antialiased ${colors.bg} text-neutral-800 selection:bg-black selection:text-white min-h-screen pb-20 sm:pb-0`}
          style={isCustomColor ? { 
            '--custom-primary': customHex, 
            '--custom-secondary': customHex + '1A' 
@@ -93,7 +88,7 @@ export function LandingPageRenderer({ page }: Props) {
           </div>
           <div className="w-full md:w-1/2 order-2 md:order-1 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
             <div className="space-y-4">
-              <h1 className={`font-jakarta text-4xl md:text-5xl font-bold tracking-tight ${colors.textPrimary} leading-tight`}>{c.headline || 'Headline Utama'}</h1>
+              <h1 className={`font-sans text-4xl md:text-5xl font-bold tracking-tight ${colors.textPrimary} leading-tight`}>{c.headline || 'Headline Utama'}</h1>
               <p className="text-lg md:text-xl text-neutral-600 leading-relaxed">{c.subheadline || 'Subheadline'}</p>
             </div>
             
@@ -112,7 +107,7 @@ export function LandingPageRenderer({ page }: Props) {
         {c.pain_points && c.pain_points.filter(Boolean).length > 0 && (
           <section className={`${colors.secondary} py-16 px-4`}>
             <div className="max-w-3xl mx-auto space-y-8">
-              <h2 className={`font-jakarta text-center text-2xl font-bold ${colors.textSecondary}`}>Sering mengalami ini?</h2>
+              <h2 className={`font-sans text-center text-2xl font-bold ${colors.textSecondary}`}>Sering mengalami ini?</h2>
               <div className="space-y-4">
                 {c.pain_points.map((p, i) => p ? (
                   <div key={i} className="flex items-start gap-4 bg-white/60 backdrop-blur p-4 rounded-xl shadow-sm">
@@ -129,7 +124,7 @@ export function LandingPageRenderer({ page }: Props) {
         <section className="py-16 px-4 max-w-5xl mx-auto space-y-12">
           {c.solution_intro && (
             <div className="text-center max-w-2xl mx-auto space-y-4">
-              <h2 className={`font-jakarta text-3xl font-bold ${colors.textPrimary}`}>{c.solution_intro}</h2>
+              <h2 className={`font-sans text-3xl font-bold ${colors.textPrimary}`}>{c.solution_intro}</h2>
               <div className="w-16 h-1 bg-black mx-auto rounded-full opacity-10"></div>
             </div>
           )}
@@ -139,7 +134,7 @@ export function LandingPageRenderer({ page }: Props) {
               {c.benefits.map((b, i) => (b.title || b.desc) ? (
                 <div key={i} className="bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm hover:shadow-md transition-shadow">
                   <div className="text-4xl mb-4">{b.icon || '✨'}</div>
-                  <h3 className={`font-jakarta text-lg font-bold text-neutral-900 mb-2`}>{b.title}</h3>
+                  <h3 className={`font-sans text-lg font-bold text-neutral-900 mb-2`}>{b.title}</h3>
                   <p className="text-neutral-600 text-sm leading-relaxed">{b.desc}</p>
                 </div>
               ) : null)}
@@ -151,7 +146,7 @@ export function LandingPageRenderer({ page }: Props) {
         {t && t.length > 0 && (
           <section className="bg-neutral-50 py-16 px-4 border-y border-neutral-200">
             <div className="max-w-5xl mx-auto space-y-10">
-              <h2 className={`font-jakarta text-center text-3xl font-bold ${colors.textPrimary}`}>Kata Mereka</h2>
+              <h2 className={`font-sans text-center text-3xl font-bold ${colors.textPrimary}`}>Kata Mereka</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {t.map((testi, i) => (
@@ -166,7 +161,7 @@ export function LandingPageRenderer({ page }: Props) {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={testi.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(testi.name || 'User')}&background=random`} alt={testi.name} className="w-10 h-10 rounded-full object-cover bg-neutral-100"/>
                       <div>
-                        <p className={`font-jakarta font-bold text-neutral-900 text-sm`}>{testi.name}</p>
+                        <p className={`font-sans font-bold text-neutral-900 text-sm`}>{testi.name}</p>
                         <p className="text-xs text-neutral-500">{testi.location}</p>
                       </div>
                     </div>
@@ -180,7 +175,7 @@ export function LandingPageRenderer({ page }: Props) {
         {/* Bottom CTA */}
         <section className="py-16 px-4 bg-white">
           <div className="max-w-2xl mx-auto text-center space-y-6">
-            <h2 className={`font-jakarta text-3xl font-bold ${colors.textPrimary}`}>Tunggu Apa Lagi?</h2>
+            <h2 className={`font-sans text-3xl font-bold ${colors.textPrimary}`}>Tunggu Apa Lagi?</h2>
             <a href={waLink} target="_blank" rel="noopener noreferrer" className={`w-full sm:w-auto inline-flex justify-center items-center px-10 py-5 text-lg font-bold text-white transition-all ${colors.button} ${colors.buttonHover} rounded-2xl shadow-xl hover:-translate-y-1`}>
               {c.cta_button || 'Pesan Sekarang'}
             </a>

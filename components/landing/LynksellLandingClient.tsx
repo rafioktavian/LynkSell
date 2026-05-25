@@ -345,7 +345,7 @@ export default function LynksellLandingClient() {
         }
 
         h1 {
-          font-family: var(--font-lora), serif;
+          font-family: var(--font-sans), sans-serif;
           font-size: 2.5rem;
           line-height: 1.2;
           color: var(--color-text);
@@ -504,8 +504,8 @@ export default function LynksellLandingClient() {
         .mockup-title {
           font-size: 1.25rem;
           font-weight: 700;
-          font-family: var(--font-lora), serif;
-          font-style: italic;
+          font-family: var(--font-sans), sans-serif;
+          font-style: normal;
           color: var(--color-text);
           margin-bottom: 12px;
         }
@@ -541,7 +541,7 @@ export default function LynksellLandingClient() {
           margin-bottom: 16px;
         }
         .section-inner h2 {
-          font-family: var(--font-lora), serif;
+          font-family: var(--font-sans), sans-serif;
           font-size: 2rem;
           color: var(--color-text);
           margin-bottom: 24px;
@@ -588,7 +588,7 @@ export default function LynksellLandingClient() {
           position: absolute;
           top: 24px;
           right: 32px;
-          font-family: var(--font-lora);
+          font-family: var(--font-sans), sans-serif;
           font-size: 64px;
           font-weight: 700;
           color: rgba(79, 70, 229, 0.05);
@@ -655,7 +655,7 @@ export default function LynksellLandingClient() {
           margin-bottom: 12px;
         }
         .value-num {
-          font-family: var(--font-lora);
+          font-family: var(--font-sans), sans-serif;
           font-size: 4rem;
           line-height: 1;
           color: var(--color-primary);
@@ -841,7 +841,7 @@ export default function LynksellLandingClient() {
           margin: 0 auto;
         }
         .cta-inner h2 {
-          font-family: var(--font-lora);
+          font-family: var(--font-sans), sans-serif;
           font-size: 2.5rem;
           color: var(--color-text);
           margin-bottom: 24px;
