@@ -141,10 +141,11 @@ export async function updatePageAction(pageId: string, data: UpdatePageInput): P
       updateData.copyData = validCopy.data;
     }
     
-    if (data.colorScheme) updateData.colorScheme = data.colorScheme;
-    if (data.harga) updateData.harga = data.harga;
-    if (data.whatsappNumber) updateData.whatsappNumber = formatWhatsApp(data.whatsappNumber);
-    if (data.testimonials) updateData.testimonials = data.testimonials;
+    if (data.colorScheme !== undefined) updateData.colorScheme = data.colorScheme;
+    if (data.harga !== undefined) updateData.harga = data.harga;
+    if (data.whatsappNumber !== undefined) updateData.whatsappNumber = formatWhatsApp(data.whatsappNumber);
+    if (data.testimonials !== undefined) updateData.testimonials = data.testimonials;
+    if (data.productName !== undefined) updateData.productName = data.productName;
     
     await pageRef.update(updateData);
 
@@ -257,6 +258,7 @@ export async function publishPageAction(pageId: string): Promise<ActionResult> {
     const fullSlug = pageDoc.data()?.fullSlug;
     if (fullSlug) {
       revalidatePath(`/${fullSlug}`);
+      // @ts-ignore
       revalidateTag('pages', 'max');
     }
 
@@ -293,6 +295,7 @@ export async function unpublishPageAction(pageId: string): Promise<ActionResult>
     const fullSlug = pageDoc.data()?.fullSlug;
     if (fullSlug) {
       revalidatePath(`/${fullSlug}`);
+      // @ts-ignore
       revalidateTag('pages', 'max');
     }
 
@@ -332,6 +335,7 @@ export async function deletePageAction(pageId: string): Promise<ActionResult> {
     revalidatePath('/dashboard');
     const fullSlug = pageDoc.data()?.fullSlug;
     if (fullSlug) {
+      // @ts-ignore
       revalidateTag('pages', 'max');
     }
 

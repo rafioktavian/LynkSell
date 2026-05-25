@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { updatePageAction, publishPageAction } from "@/app/actions/page.actions";
+import { updatePageAction, publishPageAction, updatePageSlugAction } from "@/app/actions/page.actions";
 import { toast } from "sonner";
 import { Save, Globe, Upload, Trash2, Plus, ChevronDown, ChevronUp, Copy, PartyPopper } from "lucide-react";
 import { TestimonialManager } from "./TestimonialManager";
@@ -155,38 +155,51 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
     }
   };
 
+  const saveUpdates = async () => {
+    const isSlugChanged = formData.pageSlug !== page.pageSlug;
+    
+    if (isSlugChanged) {
+      const slugRes = await updatePageSlugAction(page.id, formData.pageSlug);
+      if (!slugRes.success) {
+        return { success: false, error: slugRes.error };
+      }
+    }
+
+    const updates: any = {
+      productName: formData.productName,
+      whatsappNumber: formData.whatsappNumber,
+      harga: formData.harga,
+      colorScheme: formData.colorScheme,
+      copyData: {
+        ...page.copyData,
+        headline: formData.headline,
+        subheadline: formData.subheadline,
+        urgency_text: formData.urgency_text,
+        cta_button: formData.cta_button,
+        whatsapp_message: formData.whatsapp_message,
+        solution_intro: formData.solution_intro,
+        pain_points: painPoints,
+        benefits: benefits,
+      }
+    };
+    
+    const res = await updatePageAction(page.id, updates);
+    if (res.success) {
+      if (isSlugChanged) {
+          const newFullSlug = `${page.brandSlug}/${formData.pageSlug}`;
+          onUpdateLocal({ fullSlug: newFullSlug, pageSlug: formData.pageSlug });
+      }
+      return { success: true };
+    } else {
+      return { success: false, error: res.error };
+    }
+  };
+
   const handleSave = () => {
     startTransition(async () => {
-      const isSlugChanged = formData.pageSlug !== page.pageSlug;
-      const updates: any = {
-        productName: formData.productName,
-        whatsappNumber: formData.whatsappNumber,
-        harga: formData.harga,
-        colorScheme: formData.colorScheme,
-        pageSlug: formData.pageSlug,
-        copyData: {
-          ...page.copyData,
-          headline: formData.headline,
-          subheadline: formData.subheadline,
-          urgency_text: formData.urgency_text,
-          cta_button: formData.cta_button,
-          whatsapp_message: formData.whatsapp_message,
-          solution_intro: formData.solution_intro,
-          pain_points: painPoints,
-          benefits: benefits,
-        }
-      };
-
-      if (isSlugChanged) {
-        updates.fullSlug = `${page.brandSlug}/${formData.pageSlug}`;
-      }
-      
-      const res = await updatePageAction(page.id, updates);
+      const res = await saveUpdates();
       if (res.success) {
         toast.success("Perubahan disimpan sebagai Draft");
-        if (isSlugChanged) {
-            onUpdateLocal({ fullSlug: updates.fullSlug, pageSlug: formData.pageSlug });
-        }
       } else {
         toast.error(res.error || "Gagal menyimpan");
       }
@@ -195,7 +208,11 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
 
   const handlePublish = () => {
     startTransition(async () => {
-      await handleSave();
+      const saveRes = await saveUpdates();
+      if (!saveRes.success) {
+        toast.error(saveRes.error || "Gagal menyimpan sebelum publish");
+        return;
+      }
       
       const res = await publishPageAction(page.id);
       if (res.success) {
@@ -490,7 +507,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
         <Button 
           type="button"
           onClick={handlePublish} 
-          disabled={isPending || (page.status === 'published' && formData.pageSlug === page.pageSlug)} 
+          disabled={isPending} 
           className="flex-1 bg-black hover:bg-neutral-800 text-white"
         >
           <Globe className="w-4 h-4 mr-2" /> 

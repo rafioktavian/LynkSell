@@ -222,27 +222,22 @@ export default function LynksellLandingClient() {
           will-change: transform, opacity;
         }
         [data-animate="fade-up"] {
-          opacity: 0;
           transform: translateY(30px);
           transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
         [data-animate="fade-scale"] {
-          opacity: 0;
           transform: scale(0.96) translateY(20px);
           transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         [data-animate="slide-in"] {
-          opacity: 0;
           transform: translateX(-16px);
           transition: opacity 0.5s ease, transform 0.5s ease;
         }
         [data-animate="mockup-reveal"] {
-          opacity: 0;
           transform: scale(0.98) translateY(40px);
           transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .is-visible {
-          opacity: 1 !important;
           transform: none !important;
         }
 

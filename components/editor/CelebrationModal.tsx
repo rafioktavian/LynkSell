@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import confetti from "canvas-confetti";
 import * as QRCode from "qrcode";
-import { Copy, Instagram, Share2, ExternalLink, ArrowRight, Plus } from "lucide-react";
+import { Copy, Share2, ExternalLink, ArrowRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -145,7 +145,7 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
               <Share2 className="w-4 h-4 mr-2" /> WA
             </Button>
             <Button variant="outline" className="w-full text-pink-600 bg-pink-50 hover:bg-pink-100 ring-1 ring-pink-200/50 border-0" onClick={handleInstaBioCopy}>
-              <Instagram className="w-4 h-4 mr-2" /> Bio IG
+              <Share2 className="w-4 h-4 mr-2" /> Bio IG
             </Button>
             <Button variant="outline" className="w-full text-blue-600 bg-blue-50 hover:bg-blue-100 ring-1 ring-blue-200/50 border-0" onClick={handleCopyLink}>
               <Copy className="w-4 h-4 mr-2" /> Copy

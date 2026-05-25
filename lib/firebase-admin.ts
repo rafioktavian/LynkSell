@@ -2,15 +2,10 @@ import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { getStorage } from 'firebase-admin/storage';
-import fs from 'fs';
-import path from 'path';
 
 let firebaseConfig: any = null;
 try {
-  const configPath = path.resolve(process.cwd(), 'firebase-applet-config.json');
-  if (fs.existsSync(configPath)) {
-    firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-  }
+  firebaseConfig = require('../firebase-applet-config.json');
 } catch (e) {
   console.error("Error reading firebase-applet-config.json in admin sdk", e);
 }

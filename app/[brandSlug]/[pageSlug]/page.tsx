@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import { isDemoMode, getDemoPage } from '@/lib/demo';
 
 async function getPublishedPage(fullSlug: string): Promise<any> {
-  'use cache';
+  "use cache";
   if (isDemoMode()) {
     return getDemoPage(fullSlug);
   }
@@ -28,25 +28,7 @@ async function getPublishedPage(fullSlug: string): Promise<any> {
   };
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ brandSlug: string, pageSlug: string }> }): Promise<Metadata> {
-  const { brandSlug, pageSlug } = await params;
-  const fullSlug = `${brandSlug}/${pageSlug}`;
-  const page = await getPublishedPage(fullSlug);
-  
-  if (!page) {
-    return { title: 'Halaman Tidak Ditemukan | LynkSell' };
-  }
-
-  return {
-    title: `${page.productName} | ${page.brandSlug}`,
-    description: page.copyData?.headline || `Beli ${page.productName} sekarang`,
-    openGraph: {
-      title: page.productName,
-      description: page.copyData?.headline,
-      images: page.productImageUrl ? [page.productImageUrl] : [],
-    }
-  };
-}
+// Metadata removed temporarily
 
 export default async function Page({ params }: { params: Promise<{ brandSlug: string, pageSlug: string }> }) {
   const { brandSlug, pageSlug } = await params;

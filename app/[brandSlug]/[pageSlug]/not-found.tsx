@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+"use client";
 
 export default function NotFound() {
   return (
@@ -10,11 +9,9 @@ export default function NotFound() {
         <p className="text-slate-600 mb-8">
           Maaf, halaman jualan yang Anda tuju mungkin sudah dihapus atau URL-nya salah.
         </p>
-        <Link href="/">
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-8 h-12">
-            Buat halaman jualanmu sendiri &rarr;
-          </Button>
-        </Link>
+        <a href="/" className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-8 py-3">
+          Buat halaman jualanmu sendiri &rarr;
+        </a>
       </div>
     </div>
   );
