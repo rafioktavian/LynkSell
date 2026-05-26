@@ -3,7 +3,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'us-west1-docker.pkg.dev/lateral-nomad-300414/cloud-run-source-deploy/lynksell:$COMMIT_SHA', '.' ]
 
-  # Push image ke Artifact Registry
+  # Push image ke Artifact Registry resmi
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'push', 'us-west1-docker.pkg.dev/lateral-nomad-300414/cloud-run-source-deploy/lynksell:$COMMIT_SHA' ]
 
@@ -20,6 +20,5 @@ steps:
       - '--platform'
       - 'managed'
 
-# Bagian krusial untuk menaikkan spesifikasi RAM/CPU saat kompilasi
 options:
   machineType: 'E2_HIGHCPU_8'
