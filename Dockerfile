@@ -1,18 +1,36 @@
-# 1. Gunakan Node.js image resmi
-FROM node:18-alpine
+FROM node:18-alpine AS base
+
+# 1. Install dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
-# 2. Salin package management file
 COPY package*.json ./
+RUN npm ci
 
-# 3. Install semua dependencies proyek Anda
-RUN npm install
-
-# 4. Salin seluruh source code proyek Next.js ke container
+# 2. Rebuild source code
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# 5. Jalankan proses kompilasi produksi Next.js (next build)
+ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
-# 6. Jalankan aplikasi Next.js saat container dinyalakan
-CMD ["npm", "run", "start"]
+# 3. Production runner
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+USER nextjs
+EXPOSE 3000
+ENV PORT 3000
+
+CMD ["npm", "start"]
