@@ -40,7 +40,7 @@ export default function PrivacyPage() {
             <p>Untuk mewujudkan pembuatan halaman instan, kami menggunakan teknologi AI dari <strong className="text-slate-900">Google Gemini</strong>. Data foto dan deskripsi yang Anda berikan akan dikirimkan secara aman ke API pihak ketiga ini murni untuk evaluasi dan pembuatan respon konten. Kami juga menggunakan <strong className="text-slate-900">Firebase</strong> untuk penyimpanan basis data dan foto secara aman.</p>
 
             <h3 className="text-xl font-bold text-slate-900 mt-8 mb-4">4. Berbagi dan Pengungkapan</h3>
-            <p>Kami <strong className="text-slate-900">TIDAK AKAN</strong> menjual, menyewakan, atau mendistribusikan data personal Anda kepada pihak ketiga untuk tujuan pemasaran. Data yang Anda buat secara eksplisit untuk "publik" (halaman landing URL Anda) secara bawaan memang dirancang agar bisa diakses siapapun melalui link. Pastikan memilah mana informasi yang patut ditampilkan dalam halaman publik Anda.</p>
+            <p>Kami <strong className="text-slate-900">TIDAK AKAN</strong> menjual, menyewakan, atau mendistribusikan data personal Anda kepada pihak ketiga untuk tujuan pemasaran. Data yang Anda buat secara eksplisit untuk &quot;publik&quot; (halaman landing URL Anda) secara bawaan memang dirancang agar bisa diakses siapapun melalui link. Pastikan memilah mana informasi yang patut ditampilkan dalam halaman publik Anda.</p>
 
             <h3 className="text-xl font-bold text-slate-900 mt-8 mb-4">5. Keamanan Data</h3>
             <p>Kami berkomitmen melindungi data base yang ada. Komunikasi menggunakan enkripsi (HTTPS/SSL), dan semua data sensitif dijaga aksesibilitasnya menggunakan Security Rules. Kendati demikian, tidak ada metode transmisi internet yang 100% aman.</p>

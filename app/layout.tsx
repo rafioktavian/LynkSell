@@ -15,6 +15,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://lynksell.id'),
   title: 'LynkSell - AI Landing Page Generator untuk UMKM',
   description: 'LynkSell membantu UMKM Indonesia membuat halaman jualan profesional, ringan, dan SEO-friendly dalam 30 detik tanpa potongan komisi.',
   keywords: ['Landing Page', 'UMKM Indonesia', 'AI Landing Page', 'Jualan Online', 'Tanpa Komisi'],

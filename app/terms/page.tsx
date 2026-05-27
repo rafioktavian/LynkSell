@@ -37,7 +37,7 @@ export default function TermsPage() {
             </ul>
 
             <h3 className="text-xl font-bold text-slate-900 mt-8 mb-4">5. Ketersediaan Layanan & AI</h3>
-            <p>Pembuatan teks (copywriting) dilakukan otomatis oleh Kecerdasan Buatan (AI) Google Gemini. Kami tidak menjamin keakuratan teks dan menyarankan Anda untuk meninjau hasil salinan (copy) yang dibuat sebelum disebarluaskan. LynkSell disediakan "apa adanya" (as is) dan kami dapat menghentikan atau mengubah fitur sewaktu-waktu.</p>
+            <p>Pembuatan teks (copywriting) dilakukan otomatis oleh Kecerdasan Buatan (AI) Google Gemini. Kami tidak menjamin keakuratan teks dan menyarankan Anda untuk meninjau hasil salinan (copy) yang dibuat sebelum disebarluaskan. LynkSell disediakan &quot;apa adanya&quot; (as is) dan kami dapat menghentikan atau mengubah fitur sewaktu-waktu.</p>
 
             <h3 className="text-xl font-bold text-slate-900 mt-8 mb-4">6. Batasan Tanggung Jawab</h3>
             <p>Semua transaksi yang terjadi melalui tautan atau halaman buatan LynkSell murni melibatkan penjual dan pembeli. LynkSell hanya berperan sebagai penyedia layanan perangkat lunak pembuat halaman (software as a service) dan tidak bertanggung jawab atas perselisihan, pengiriman barang, atau pembayaran produk.</p>

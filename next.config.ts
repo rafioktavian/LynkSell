@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
         hostname: 'ui-avatars.com',
       }
     ],
-  },
+  }
 };
 
 export default nextConfig;
