@@ -1,4 +1,5 @@
-FROM node:18-alpine AS base
+# Ganti dari node:18 ke node:20 agar Next.js Anda mau berjalan
+FROM node:20-alpine AS base
 
 # 1. Install dependencies
 FROM base AS deps

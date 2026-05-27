@@ -23,4 +23,5 @@ steps:
 # Memaksa Cloud Build menyewa mesin besar ber-RAM longgar agar tidak OOM
 options:
   machineType: 'E2_HIGHCPU_8'
-  logging: CLOUD_LOGGING_ONLY
+  logging: 'CLOUD_LOGGING_ONLY'
+logsBucket: 'CLOUD_LOGGING_ONLY'
