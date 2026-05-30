@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
@@ -9,9 +11,9 @@ export default function NotFound() {
         <p className="text-slate-600 mb-8">
           Maaf, halaman jualan yang Anda tuju mungkin sudah dihapus atau URL-nya salah.
         </p>
-        <a href="/" className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-8 py-3">
+        <Link href="/" className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-8 py-3">
           Buat halaman jualanmu sendiri &rarr;
-        </a>
+        </Link>
       </div>
     </div>
   );

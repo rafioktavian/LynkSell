@@ -192,7 +192,7 @@ export function TestimonialManager({ page, onUpdateLocal }: { page: any, onUpdat
                 </div>
                 
                 <p className="text-xs text-neutral-500 mb-1 truncate">{t.location}</p>
-                <p className="text-sm text-neutral-700 line-clamp-2 leading-snug">"{t.text}"</p>
+                <p className="text-sm text-neutral-700 line-clamp-2 leading-snug">&quot;{t.text}&quot;</p>
               </div>
 
               {/* Action Buttons */}

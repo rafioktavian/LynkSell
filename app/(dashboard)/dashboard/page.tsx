@@ -41,7 +41,6 @@ export default async function DashboardPage() {
 
     const pagesSnap = await db.collection('pages')
       .where('userId', '==', session.user.id)
-      .orderBy('createdAt', 'desc')
       .get();
 
     pages = pagesSnap.docs.map(doc => {
@@ -53,6 +52,10 @@ export default async function DashboardPage() {
         updatedAt: data.updatedAt?.toMillis ? data.updatedAt.toMillis() : data.updatedAt,
         publishedAt: data.publishedAt?.toMillis ? data.publishedAt.toMillis() : data.publishedAt,
       };
+    }).sort((a: any, b: any) => {
+      const timeA = a.createdAt || 0;
+      const timeB = b.createdAt || 0;
+      return timeB - timeA;
     });
   }
 

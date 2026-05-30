@@ -143,7 +143,7 @@ export default function Testimonials() {
               </div>
               
               <p className="text-slate-700 leading-relaxed font-medium">
-                "{testimonial.text}"
+                &quot;{testimonial.text}&quot;
               </p>
             </motion.div>
           ))}

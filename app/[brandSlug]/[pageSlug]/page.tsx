@@ -13,12 +13,14 @@ async function getPublishedPage(fullSlug: string): Promise<any> {
   const db = getAdminDb();
   const snap = await db.collection('pages')
     .where('fullSlug', '==', fullSlug)
-    .where('status', '==', 'published')
     .limit(1)
     .get();
     
   if (snap.empty) return null;
   const rawData = snap.docs[0].data();
+  
+  if (rawData.status !== 'published') return null;
+
   return {
     id: snap.docs[0].id,
     ...rawData,

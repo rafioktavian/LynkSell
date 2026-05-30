@@ -120,7 +120,7 @@ export function DashboardList({ pages }: { pages: any[] }) {
           <DialogHeader>
             <DialogTitle>Hapus Halaman?</DialogTitle>
             <DialogDescription>
-              Halaman "{pageToDelete?.productName || 'Tanpa Judul'}" akan dihapus permanen. Aksi ini tidak dapat dibatalkan.
+              Halaman &quot;{pageToDelete?.productName || 'Tanpa Judul'}&quot; akan dihapus permanen. Aksi ini tidak dapat dibatalkan.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex gap-2 flex-col-reverse sm:flex-row mt-4">

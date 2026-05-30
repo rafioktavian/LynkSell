@@ -517,7 +517,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
 
       {/* CELEBRATION MODAL */}
       <Dialog open={showCelebration} onOpenChange={setShowCelebration}>
-        <DialogContent className="sm:max-w-md text-center flex flex-col items-center">
+        <DialogContent className="sm:max-w-xl text-center flex flex-col items-center">
           <DialogHeader>
             <DialogTitle className="text-center w-full">🎉 Yey! Halaman Siap Jualan</DialogTitle>
           </DialogHeader>

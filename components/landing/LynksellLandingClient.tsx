@@ -1038,7 +1038,7 @@ export default function LynksellLandingClient() {
                     referrerPolicy="no-referrer"
                   />
                 </div>
-                <h3 className="mockup-title">"Kulit Cerah Dalam 7 Hari — Atau Uang Kembali"</h3>
+                <h3 className="mockup-title">&quot;Kulit Cerah Dalam 7 Hari — Atau Uang Kembali&quot;</h3>
                 <p className="mockup-desc">Serum Vitamin C 20% yang diformulasikan khusus untuk kulit tropis. Sudah dipakai 3.200+ pembeli dengan rating 4.9/5.</p>
                 <div className="mockup-btn">Pesan Sekarang &rarr;</div>
               </div>
@@ -1180,7 +1180,7 @@ export default function LynksellLandingClient() {
                 </div>
                 <div className="t-stars">★ ★ ★ ★ ★</div>
                 <p className="t-quote">
-                  "Semenjak pakai LynkSell, saya nggak pernah mikirin potongan komisi lagi. Link-nya saya taruh di bio IG, pembeli langsung klik dan chat WA. Gampang banget!"
+                  &quot;Semenjak pakai LynkSell, saya nggak pernah mikirin potongan komisi lagi. Link-nya saya taruh di bio IG, pembeli langsung klik dan chat WA. Gampang banget!&quot;
                 </p>
               </div>
 
@@ -1197,7 +1197,7 @@ export default function LynksellLandingClient() {
                 </div>
                 <div className="t-stars">★ ★ ★ ★ ★</div>
                 <p className="t-quote">
-                  "Cuma modal foto risoles, AI-nya buatin kata-kata keren banget. Penjualan naik 30% bulan ini karena kelihatan lebih profesional."
+                  &quot;Cuma modal foto risoles, AI-nya buatin kata-kata keren banget. Penjualan naik 30% bulan ini karena kelihatan lebih profesional.&quot;
                 </p>
               </div>
 
@@ -1214,7 +1214,7 @@ export default function LynksellLandingClient() {
                 </div>
                 <div className="t-stars">★ ★ ★ ★ ★</div>
                 <p className="t-quote">
-                  "Tadinya repot balasin chat satu-satu buat kasih deskripsi barang. Sekarang kasih aja link LynkSell, semua info lengkap di situ. Praktis!"
+                  &quot;Tadinya repot balasin chat satu-satu buat kasih deskripsi barang. Sekarang kasih aja link LynkSell, semua info lengkap di situ. Praktis!&quot;
                 </p>
               </div>
 
@@ -1231,7 +1231,7 @@ export default function LynksellLandingClient() {
                 </div>
                 <div className="t-stars">★ ★ ★ ★ ★</div>
                 <p className="t-quote">
-                  "Setup-nya beneran cepat, nggak sampai semenit. Desain websitenya rapi dan bisa ditaruh di mana aja. Nyesel ga dari dulu pake ini!"
+                  &quot;Setup-nya beneran cepat, nggak sampai semenit. Desain websitenya rapi dan bisa ditaruh di mana aja. Nyesel ga dari dulu pake ini!&quot;
                 </p>
               </div>
 

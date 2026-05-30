@@ -180,7 +180,7 @@ export function PageCard({ page }: { page: any }) {
           <DialogHeader>
             <DialogTitle>Hapus Halaman?</DialogTitle>
             <DialogDescription>
-              Halaman "{page.productName}" akan dihapus permanen. Aksi ini tidak dapat dibatalkan.
+              Halaman &quot;{page.productName}&quot; akan dihapus permanen. Aksi ini tidak dapat dibatalkan.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex gap-2 flex-col-reverse sm:flex-row mt-4">
