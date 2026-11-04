@@ -67,19 +67,19 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-50 flex flex-col font-sans overflow-hidden">
+    <div className="w-full min-h-screen bg-surface-soft flex flex-col font-sans overflow-hidden">
       <DashboardHeader user={session.user} />
       {!hasBrand && <BrandSetupModal isOpen={true} />}
 
-      <main className="flex-grow p-4 sm:p-8 flex flex-col gap-6 max-w-5xl mx-auto w-full h-full min-h-0">
+      <main className="flex-grow px-5 py-10 sm:px-8 sm:py-14 flex flex-col gap-10 max-w-7xl mx-auto w-full h-full min-h-0">
         
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 shrink-0">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 mb-1">Selamat Datang, {userData?.brandName || session.user.name}!</h1>
-            <p className="text-slate-500 text-sm">Pantau performa dan buat landing page baru untuk produk Anda.</p>
+            <p className="eyebrow mb-4 text-ink-muted">Ruang usaha Anda</p><h1 className="text-3xl sm:text-5xl font-semibold tracking-[-.045em] text-ink mb-3">Halo, {userData?.brandName || session.user.name}.</h1>
+            <p className="text-ink-muted text-base leading-relaxed max-w-[48ch]">Pantau performa dan buat landing page baru untuk produk Anda.</p>
           </div>
           <Link href="/dashboard/new">
-            <Button className="bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-100 rounded-xl px-6 h-12 text-base w-full sm:w-auto text-white">
+            <Button className="rounded-full px-6 h-12 text-sm w-full sm:w-auto">
               <Plus className="w-5 h-5 mr-2" />
               Buat Halaman Baru
             </Button>

@@ -23,7 +23,7 @@ export default async function NewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 sm:p-8">
+    <div className="min-h-screen bg-surface-soft flex items-start justify-center px-4 py-8 sm:p-12">
        <WizardShell brandSlug={userData.brandSlug} />
     </div>
   );

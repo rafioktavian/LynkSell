@@ -12,47 +12,13 @@ export function StatsBar({ pages }: { pages: Page[] }) {
   const draft = pages.filter((p) => p.status === "draft").length;
   const views = pages.reduce((acc, p) => acc + (p.viewCount || 0), 0);
 
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
-      <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-start gap-4">
-        <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
-          <FileText className="w-5 h-5" />
-        </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium mb-1">Total Halaman</p>
-          <p className="text-2xl font-bold text-gray-900">{total}</p>
-        </div>
-      </div>
-      
-      <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-start gap-4">
-        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-          <CheckCircle2 className="w-5 h-5" />
-        </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium mb-1">Published</p>
-          <p className="text-2xl font-bold text-gray-900">{published}</p>
-        </div>
-      </div>
-      
-      <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-start gap-4">
-        <div className="p-2 bg-gray-100 text-gray-600 rounded-lg">
-          <FileEdit className="w-5 h-5" />
-        </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium mb-1">Draft</p>
-          <p className="text-2xl font-bold text-gray-900">{draft}</p>
-        </div>
-      </div>
-      
-      <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex items-start gap-4">
-        <div className="p-2 bg-orange-50 text-orange-600 rounded-lg">
-          <Eye className="w-5 h-5" />
-        </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium mb-1">Total Views</p>
-          <p className="text-2xl font-bold text-gray-900">{views}</p>
-        </div>
-      </div>
-    </div>
-  );
+  const stats = [
+    { label: 'Total halaman', value: total, Icon: FileText },
+    { label: 'Sudah terbit', value: published, Icon: CheckCircle2 },
+    { label: 'Masih draft', value: draft, Icon: FileEdit },
+    { label: 'Kunjungan', value: views, Icon: Eye },
+  ];
+  return <section aria-label="Ringkasan performa" className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
+    {stats.map(({ label, value, Icon }) => <div key={label} className="rounded-3xl border bg-white p-5 sm:p-6"><div className="mb-6 flex items-center justify-between gap-2 text-ink-muted"><p className="text-xs font-medium">{label}</p><Icon size={17} strokeWidth={1.5} aria-hidden="true" /></div><p className="text-3xl font-semibold tracking-[-.04em] tabular-nums">{value.toLocaleString('id-ID')}</p></div>)}
+  </section>;
 }

@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useTransition, useRef, useEffect, useCallback } from "react";
+import { useState, useTransition, useRef, useEffect, useId } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { updatePageAction, publishPageAction, updatePageSlugAction } from "@/app/actions/page.actions";
 import { toast } from "sonner";
-import { Save, Globe, Upload, Trash2, Plus, ChevronDown, ChevronUp, Copy, PartyPopper } from "lucide-react";
+import { Save, Globe, Upload, Trash2, Plus, ChevronDown, ChevronUp, Copy, PartyPopper, ImageIcon } from "lucide-react";
+import { ThemePicker } from "@/components/presentation/ThemePicker";
+import { ProductImage } from "@/components/presentation/ProductImage";
 import { TestimonialManager } from "./TestimonialManager";
 import { compressImage } from "@/lib/image-compress";
 import {
@@ -19,28 +21,30 @@ import {
 } from "@/components/ui/dialog";
 
 // Simple Accordion Item
-function AccordionSection({ 
-  title, 
-  isOpen, 
-  onToggle, 
-  children 
-}: { 
-  title: string, 
-  isOpen: boolean, 
-  onToggle: () => void, 
-  children: React.ReactNode 
+function AccordionSection({
+  title,
+  isOpen,
+  onToggle,
+  children
+}: {
+  title: string,
+  isOpen: boolean,
+  onToggle: () => void,
+  children: React.ReactNode
 }) {
+  const contentId = useId();
   return (
-    <div className="border rounded-lg bg-white overflow-hidden shadow-sm">
-      <button 
-        className="w-full flex items-center justify-between p-4 font-semibold text-neutral-800 hover:bg-neutral-50 transition-colors"
+    <div className="overflow-hidden rounded-2xl border bg-white">
+      <button
+        type="button" aria-expanded={isOpen} aria-controls={contentId}
+        className="w-full min-h-14 flex items-center justify-between gap-3 p-5 text-left text-sm font-medium text-ink hover:bg-surface-soft"
         onClick={onToggle}
       >
         {title}
-        {isOpen ? <ChevronUp className="w-5 h-5 text-neutral-400" /> : <ChevronDown className="w-5 h-5 text-neutral-400" />}
+        {isOpen ? <ChevronUp className="w-5 h-5 text-ink-muted" /> : <ChevronDown className="w-5 h-5 text-ink-muted" />}
       </button>
       {isOpen && (
-        <div className="p-4 border-t bg-white">
+        <div id={contentId} className="p-5 border-t bg-white">
           {children}
         </div>
       )}
@@ -82,7 +86,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
   const [isPending, startTransition] = useTransition();
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [showCelebration, setShowCelebration] = useState(false);
 
   // Debounced optimistic updates
@@ -124,10 +128,10 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
     try {
       setIsUploading(true);
       const compressedBase64 = await compressImage(file);
-      
+
       const resBase64 = await fetch(compressedBase64);
       const blob = await resBase64.blob();
-      
+
       const formData = new FormData();
       formData.append('file', blob, file.name.replace(/\.[^/.]+$/, "") + ".jpg");
 
@@ -140,7 +144,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
 
       // Instant UI update
       onUpdateLocal({ productImageUrl: data.url });
-      
+
       // Background save to avoid lost image if not clicking save
       startTransition(async () => {
          await updatePageAction(page.id, { productImageUrl: data.url });
@@ -157,7 +161,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
 
   const saveUpdates = async () => {
     const isSlugChanged = formData.pageSlug !== page.pageSlug;
-    
+
     if (isSlugChanged) {
       const slugRes = await updatePageSlugAction(page.id, formData.pageSlug);
       if (!slugRes.success) {
@@ -182,7 +186,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
         benefits: benefits,
       }
     };
-    
+
     const res = await updatePageAction(page.id, updates);
     if (res.success) {
       if (isSlugChanged) {
@@ -213,7 +217,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
         toast.error(saveRes.error || "Gagal menyimpan sebelum publish");
         return;
       }
-      
+
       const res = await publishPageAction(page.id);
       if (res.success) {
         onUpdateLocal({ status: "published" });
@@ -240,17 +244,18 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
   const fullUrl = `${origin}/${page.brandSlug}/${page.pageSlug}`;
 
   return (
-    <div className="relative pb-24 min-h-full">
-      <div className="p-4 space-y-4">
-        
+    <div className="editor-panel flex h-full min-h-0 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-3 sm:p-5">
+        <div className="px-1 pb-5 pt-2"><p className="eyebrow mb-3 text-ink-muted">Sunting halaman</p><h1 className="text-2xl font-semibold tracking-[-.04em]">Buat terasa milik Anda.</h1><p className="mt-3 text-sm leading-relaxed text-ink-muted">Lihat perubahan di pratinjau. Simpan saat siap.</p></div>
+
         {/* SECTION 1 - Info Produk */}
         <AccordionSection title="1. Info Produk & Harga" isOpen={openSection === 0} onToggle={() => toggleSection(0)}>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>Foto Utama</Label>
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded overflow-hidden border">
-                  <img src={page.productImageUrl} className="w-full h-full object-cover" alt="Product" />
+                <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border bg-surface-soft">
+                  {page.productImageUrl ? <ProductImage src={page.productImageUrl} className="object-cover" sizes="80px" alt={page.productName || 'Foto produk'} /> : <ImageIcon size={24} className="text-ink-muted" aria-hidden="true" />}
                 </div>
                 <div>
                   <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
@@ -262,17 +267,17 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Nama Produk</Label>
-              <Input name="productName" value={formData.productName} onChange={handleChange} />
+              <Label htmlFor="edit-productName">Nama Produk</Label>
+              <Input id="edit-productName" name="productName" value={formData.productName} onChange={handleChange} />
             </div>
             <div className="space-y-2">
-              <Label>Harga (Contoh: Rp 99.000)</Label>
-              <Input name="harga" value={formData.harga} onChange={handleChange} />
+              <Label htmlFor="edit-harga">Harga (Contoh: Rp 99.000)</Label>
+              <Input id="edit-harga" name="harga" value={formData.harga} onChange={handleChange} />
             </div>
             <div className="space-y-2">
-              <Label>Nomor WhatsApp Pembeli</Label>
-              <Input name="whatsappNumber" value={formData.whatsappNumber} onChange={handleChange} placeholder="081234..." />
-              <p className="text-xs text-neutral-500">Menerima pesan pesanan ke nomor ini.</p>
+              <Label htmlFor="edit-whatsappNumber">Nomor WhatsApp Pembeli</Label>
+              <Input id="edit-whatsappNumber" name="whatsappNumber" value={formData.whatsappNumber} onChange={handleChange} placeholder="081234..." />
+              <p className="text-xs text-ink-muted">Menerima pesan pesanan ke nomor ini.</p>
             </div>
           </div>
         </AccordionSection>
@@ -282,7 +287,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
            <div className="space-y-4">
             <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-between">
               <span className="text-sm font-medium text-blue-900 break-all mr-2">{publishedUrl}</span>
-              <Button type="button" size="icon" variant="ghost" className="h-8 w-8 text-blue-700" onClick={() => {
+              <Button type="button" size="icon" variant="ghost" className="h-11 w-11 text-brand" aria-label="Salin link halaman" onClick={() => {
                 navigator.clipboard.writeText(fullUrl);
                 toast.success("Link disalin!");
               }}>
@@ -290,14 +295,14 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
               </Button>
             </div>
             <div className="space-y-2 pt-2 border-t text-sm">
-               <Label className="text-neutral-600">Edit Slug Akhir</Label>
+               <Label htmlFor="edit-pageSlug" className="text-ink-muted">Edit Slug Akhir</Label>
                <div className="flex gap-2 items-center">
-                 <span className="text-neutral-500 whitespace-nowrap">.../{page.brandSlug}/</span>
-                 <Input className="h-8" name="pageSlug" value={formData.pageSlug} onChange={handleChange} />
+                 <span className="text-ink-muted whitespace-nowrap">.../{page.brandSlug}/</span>
+                 <Input className="h-8" id="edit-pageSlug" name="pageSlug" value={formData.pageSlug} onChange={handleChange} />
                </div>
                {formData.pageSlug !== page.pageSlug && page.status === "published" && (
                  <p className="text-xs text-red-600 mt-2 font-medium bg-red-50 p-2 rounded">
-                   ⚠️ Mengubah URL akan memutus semua link yang sudah dibagikan sebelumnya.
+                   Mengubah URL akan memutus semua link yang sudah dibagikan sebelumnya.
                  </p>
                )}
             </div>
@@ -306,96 +311,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
 
         {/* SECTION 3 - Tampilan */}
         <AccordionSection title="3. Tema Warna Tampilan" isOpen={openSection === 2} onToggle={() => toggleSection(2)}>
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 p-2">
-             {[
-               { id: 'elegant', text: 'Elegant', colors: ['bg-slate-900', 'bg-slate-100'] },
-               { id: 'bold', text: 'Bold', colors: ['bg-orange-600', 'bg-orange-50'] },
-               { id: 'fresh', text: 'Fresh', colors: ['bg-emerald-600', 'bg-emerald-50'] },
-               { id: 'luxury', text: 'Luxury', colors: ['bg-violet-600', 'bg-black'] }
-             ].map((theme) => {
-                const isSelected = formData.colorScheme === theme.id;
-                return (
-                  <button
-                    type="button"
-                    key={theme.id}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setFormData({...formData, colorScheme: theme.id});
-                    }}
-                    className={`relative flex flex-col items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
-                      isSelected 
-                        ? "border-blue-600 bg-blue-50/50 shadow-md transform scale-[1.02]" 
-                        : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50 hover:shadow-sm"
-                    }`}
-                  >
-                     {/* Checkmark indicator for selected state */}
-                     {isSelected && (
-                       <div className="absolute -top-3 -right-3 bg-blue-600 text-white rounded-full p-1 shadow-sm border-2 border-white">
-                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                       </div>
-                     )}
-                     
-                     <div className="flex w-full h-16 rounded-lg overflow-hidden border shadow-inner">
-                       <div className={`flex-[2] ${theme.colors[0]}`} />
-                       <div className={`flex-[1] ${theme.colors[1]}`} />
-                     </div>
-                     <span className={`text-sm font-bold ${isSelected ? 'text-blue-700' : 'text-neutral-700'}`}>
-                       {theme.text}
-                     </span>
-                  </button>
-                );
-             })}
-
-             {/* Custom Color Option */}
-             {(() => {
-                const isCustom = formData.colorScheme?.startsWith('#');
-                const customHex = isCustom ? formData.colorScheme : '#3b82f6';
-                
-                return (
-                  <div className="relative flex flex-col items-center gap-2">
-                    <div
-                      onClick={(e) => {
-                        if (!isCustom) {
-                          setFormData({...formData, colorScheme: customHex});
-                        }
-                      }}
-                      className={`relative w-full flex flex-col items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
-                        isCustom 
-                          ? "border-blue-600 bg-blue-50/50 shadow-md transform scale-[1.02]" 
-                          : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50 hover:shadow-sm"
-                      }`}
-                    >
-                       {isCustom && (
-                         <div className="absolute -top-3 -right-3 bg-blue-600 text-white rounded-full p-1 shadow-sm border-2 border-white z-10">
-                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-                         </div>
-                       )}
-                       
-                       <div className="flex w-full h-16 rounded-lg overflow-hidden border shadow-inner relative group">
-                         <input
-                           type="color"
-                           value={customHex}
-                           onChange={(e) => {
-                             setFormData({...formData, colorScheme: e.target.value});
-                           }}
-                           onClick={(e) => e.stopPropagation()}
-                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                           title="Pilih Warna"
-                         />
-                         <div className="flex-[2] transition-colors" style={{ backgroundColor: customHex }} />
-                         <div className="flex-[1] transition-colors" style={{ backgroundColor: customHex + '1A' }} />
-                       </div>
-                       <span className={`text-sm font-bold ${isCustom ? 'text-blue-700' : 'text-neutral-700'}`}>
-                         Custom
-                       </span>
-                    </div>
-                    {isCustom && (
-                       <span className="text-xs text-neutral-500 uppercase font-mono">{customHex}</span>
-                    )}
-                  </div>
-                );
-             })()}
-          </div>
+          <ThemePicker value={formData.colorScheme} onChange={colorScheme => setFormData({ ...formData, colorScheme })} />
         </AccordionSection>
 
         {/* SECTION 4 - Copy & Teks */}
@@ -403,28 +319,28 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
             <div className="space-y-5">
                <div className="space-y-2">
                  <div className="flex justify-between">
-                    <Label>Headline</Label>
-                    <span className="text-xs text-neutral-400">{formData.headline.length}/100</span>
+                    <Label htmlFor="edit-headline">Headline</Label>
+                    <span className="text-xs text-ink-muted">{formData.headline.length}/100</span>
                  </div>
-                 <Textarea maxLength={100} name="headline" value={formData.headline} onChange={handleChange} rows={2} />
+                 <Textarea maxLength={100} id="edit-headline" name="headline" value={formData.headline} onChange={handleChange} rows={2} />
                </div>
-               
+
                <div className="space-y-2">
                  <div className="flex justify-between">
-                    <Label>Subheadline</Label>
-                    <span className="text-xs text-neutral-400">{formData.subheadline.length}/200</span>
+                    <Label htmlFor="edit-subheadline">Subheadline</Label>
+                    <span className="text-xs text-ink-muted">{formData.subheadline.length}/200</span>
                  </div>
-                 <Textarea maxLength={200} name="subheadline" value={formData.subheadline} onChange={handleChange} rows={2} />
+                 <Textarea maxLength={200} id="edit-subheadline" name="subheadline" value={formData.subheadline} onChange={handleChange} rows={2} />
                </div>
 
                <div className="space-y-3 pt-3 border-t">
                   <Label>Masalah Pembeli (Pain Points)</Label>
                   {painPoints.map((pt, i) => (
                     <div key={i} className="flex gap-2">
-                      <Input value={pt} onChange={(e) => {
+                      <Input aria-label={`Masalah pembeli ${i + 1}`} value={pt} onChange={(e) => {
                         const newArr = [...painPoints]; newArr[i] = e.target.value; setPainPoints(newArr);
                       }} />
-                      <Button type="button" variant="ghost" size="icon" className="text-red-500 h-9 w-9 flex-shrink-0" onClick={() => {
+                      <Button type="button" variant="ghost" size="icon" className="text-red-600 h-11 w-11 flex-shrink-0" aria-label="Hapus masalah" onClick={() => {
                         const newArr = painPoints.filter((_, idx) => idx !== i); setPainPoints(newArr);
                       }}>
                         <Trash2 className="w-4 h-4" />
@@ -437,33 +353,35 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                </div>
 
                <div className="space-y-3 pt-3 border-t">
-                  <Label>Solusi & Intro</Label>
-                  <Input name="solution_intro" value={formData.solution_intro} onChange={handleChange} />
+                  <Label htmlFor="edit-solution_intro">Solusi & Intro</Label>
+                  <Input id="edit-solution_intro" name="solution_intro" value={formData.solution_intro} onChange={handleChange} />
                </div>
 
                <div className="space-y-3">
                   <Label>Manfaat (Benefits)</Label>
                   {benefits.map((b, i) => (
                     <div key={i} className="bg-neutral-50 p-3 rounded-lg border space-y-2 relative">
-                      <Button type="button" variant="ghost" size="icon" className="absolute top-1 right-1 text-red-500 h-6 w-6" onClick={() => {
+                      <Button type="button" variant="ghost" size="icon" className="absolute top-1 right-1 text-red-600 h-11 w-11" aria-label="Hapus manfaat" onClick={() => {
                         const newArr = benefits.filter((_, idx) => idx !== i); setBenefits(newArr);
                       }}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
                       <div className="flex gap-2">
-                        <Input placeholder="Icon emoji" className="w-16" value={b.icon || "✨"} onChange={(e) => {
-                           const newArr = [...benefits]; newArr[i].icon = e.target.value; setBenefits(newArr);
-                        }} />
-                        <Input placeholder="Judul Manfaat" value={b.title} onChange={(e) => {
+                        <select aria-label={`Ikon manfaat ${i + 1}`} className="h-12 min-w-0 w-28 shrink-0 rounded-xl border bg-white px-2 text-xs" value={['sparkles', 'leaf', 'shield-check', 'truck', 'heart', 'star', 'zap', 'award', 'package', 'clock', 'droplets', 'thumbs-up'].includes(b.icon) ? b.icon : 'sparkles'} onChange={e => {
+                          const newArr = [...benefits]; newArr[i].icon = e.target.value; setBenefits(newArr);
+                        }}>
+                          {[['sparkles', 'Istimewa'], ['leaf', 'Alami'], ['shield-check', 'Terpercaya'], ['truck', 'Pengiriman'], ['heart', 'Pilihan hati'], ['star', 'Favorit'], ['zap', 'Cepat'], ['award', 'Kualitas'], ['package', 'Kemasan'], ['clock', 'Hemat waktu'], ['droplets', 'Kesegaran'], ['thumbs-up', 'Direkomendasikan']].map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                        </select>
+                        <Input aria-label="Judul manfaat" placeholder="Judul Manfaat" value={b.title} onChange={(e) => {
                           const newArr = [...benefits]; newArr[i].title = e.target.value; setBenefits(newArr);
                         }} className="font-medium" />
                       </div>
-                      <Textarea placeholder="Deskripsi singkat" value={b.desc} onChange={(e) => {
+                      <Textarea aria-label="Deskripsi manfaat" placeholder="Deskripsi singkat" value={b.desc} onChange={(e) => {
                         const newArr = [...benefits]; newArr[i].desc = e.target.value; setBenefits(newArr);
                       }} rows={2} className="text-sm" />
                     </div>
                   ))}
-                  <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => setBenefits([...benefits, { icon: "✅", title: "", desc: "" }])}>
+                  <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => setBenefits([...benefits, { icon: "sparkles", title: "", desc: "" }])}>
                     <Plus className="w-4 h-4 mr-2" /> Tambah Manfaat
                   </Button>
                </div>
@@ -471,16 +389,16 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
                <div className="space-y-3 pt-3 border-t">
                   <Label>Call to Action & Urgensi</Label>
                   <div className="space-y-2">
-                    <Label className="text-xs text-neutral-500">Teks Urgensi</Label>
-                    <Input name="urgency_text" value={formData.urgency_text} onChange={handleChange} placeholder="Sisa 5 Produk Hari Ini!" />
+                    <Label htmlFor="edit-urgency_text" className="text-xs text-ink-muted">Teks Urgensi</Label>
+                    <Input id="edit-urgency_text" name="urgency_text" value={formData.urgency_text} onChange={handleChange} placeholder="Sisa 5 Produk Hari Ini!" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs text-neutral-500">Tombol Aksi</Label>
-                    <Input name="cta_button" value={formData.cta_button} onChange={handleChange} placeholder="Pesan Sekarang" />
+                    <Label htmlFor="edit-cta_button" className="text-xs text-ink-muted">Tombol Aksi</Label>
+                    <Input id="edit-cta_button" name="cta_button" value={formData.cta_button} onChange={handleChange} placeholder="Pesan Sekarang" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs text-neutral-500">Pesan Template WA</Label>
-                    <Textarea name="whatsapp_message" value={formData.whatsapp_message} onChange={handleChange} rows={2} />
+                    <Label htmlFor="edit-whatsapp_message" className="text-xs text-ink-muted">Pesan Template WA</Label>
+                    <Textarea id="edit-whatsapp_message" name="whatsapp_message" value={formData.whatsapp_message} onChange={handleChange} rows={2} />
                   </div>
                </div>
             </div>
@@ -494,23 +412,23 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
       </div>
 
       {/* STICKY BOTTOM BAR */}
-      <div className="absolute bottom-0 left-0 w-full bg-white border-t p-3 lg:p-4 flex flex-col sm:flex-row gap-2 z-10 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-        <Button 
+      <div className="shrink-0 w-full bg-white border-t p-3 lg:p-4 flex flex-col sm:flex-row gap-2 z-10 pb-[max(.75rem,env(safe-area-inset-bottom))]">
+        <Button
           type="button"
-          onClick={handleSave} 
-          disabled={isPending} 
-          variant="outline" 
-          className="flex-1 sm:flex-none"
+          onClick={handleSave}
+          disabled={isPending}
+          variant="outline"
+          className="flex-1 sm:flex-none rounded-full"
         >
           <Save className="w-4 h-4 mr-2" /> Simpan Draft
         </Button>
-        <Button 
+        <Button
           type="button"
-          onClick={handlePublish} 
-          disabled={isPending} 
-          className="flex-1 bg-black hover:bg-neutral-800 text-white"
+          onClick={handlePublish}
+          disabled={isPending}
+          className="flex-1 rounded-full"
         >
-          <Globe className="w-4 h-4 mr-2" /> 
+          <Globe className="w-4 h-4 mr-2" />
           {page.status === 'published' ? "Update Publish" : "Publish & Dapatkan Link →"}
         </Button>
       </div>
@@ -519,7 +437,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
       <Dialog open={showCelebration} onOpenChange={setShowCelebration}>
         <DialogContent className="sm:max-w-xl text-center flex flex-col items-center">
           <DialogHeader>
-            <DialogTitle className="text-center w-full">🎉 Yey! Halaman Siap Jualan</DialogTitle>
+            <DialogTitle className="text-center w-full">Yey! Halaman Siap Jualan</DialogTitle>
           </DialogHeader>
           <div className="py-6 flex flex-col items-center gap-4">
             <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">

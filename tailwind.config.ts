@@ -18,10 +18,16 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', 'sans-serif'],
-        body: ['var(--font-body)', 'sans-serif'],
+        body: ['var(--font-sans)', 'sans-serif'],
         heading: ['var(--font-sans)', 'sans-serif'],
       },
+      boxShadow: { soft: 'var(--shadow-soft)' },
+      transitionTimingFunction: { soft: 'var(--ease-soft)' },
+      spacing: { section: 'var(--section-space)' },
       colors: {
+        surface: { DEFAULT: 'var(--surface)', soft: 'var(--surface-soft)' },
+        ink: { DEFAULT: 'var(--ink)', muted: 'var(--ink-muted)' },
+        brand: 'var(--brand-accent)',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -57,6 +63,8 @@ module.exports = {
         },
       },
       borderRadius: {
+        '3xl': '2rem',
+        '2xl': '1.75rem',
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",

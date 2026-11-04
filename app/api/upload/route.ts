@@ -45,8 +45,13 @@ export async function POST(req: NextRequest) {
     const filePath = `products/${session.user.id}/${Date.now()}-${sanitizedName}`;
 
     const adminStorage = getAdminStorage();
-    const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-    const bucketName = projectId ? `${projectId}-lynksell` : adminStorage.app.options.storageBucket;
+    // Use the bucket provisioned for this Firebase project. Constructing a
+    // guessed bucket name can target a different project resource (or trigger
+    // bucket creation, which requires billing to be enabled).
+    const bucketName =
+      process.env.FIREBASE_STORAGE_BUCKET ||
+      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+      adminStorage.app.options.storageBucket;
     
     if (!bucketName) {
       throw new Error("No storageBucket configured");
@@ -54,12 +59,6 @@ export async function POST(req: NextRequest) {
 
     const bucket = adminStorage.bucket(bucketName);
     
-    // Create bucket if it doesn't exist (handle first upload)
-    const [exists] = await bucket.exists();
-    if (!exists) {
-      await bucket.create();
-    }
-
     const bucketFile = bucket.file(filePath);
 
     // Set public: true dan contentType
@@ -74,7 +73,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, data: { url: publicUrl } });
   } catch (err: any) {
     console.error('[LynkSell] /api/upload error:', err);
-    // Jika error → return detail error for debugging
-    return NextResponse.json({ success: false, error: err.message || 'Internal Server Error' }, { status: 500 });
+    const message = String(err?.message || 'Internal Server Error');
+    const billingDisabled = /billing account.*disabled|accountdisabled/i.test(message);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: billingDisabled
+          ? 'Google Cloud Billing untuk project Firebase belum aktif. Aktifkan billing pada project yang memiliki bucket Storage, lalu coba upload kembali.'
+          : message,
+      },
+      { status: billingDisabled ? 503 : 500 },
+    );
   }
 }

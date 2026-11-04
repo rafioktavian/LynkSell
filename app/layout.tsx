@@ -1,21 +1,15 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, DM_Sans } from 'next/font/google';
+import { Geist } from 'next/font/google';
 import './globals.css';
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const geist = Geist({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
 });
 
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-body',
-  display: 'swap',
-});
-
 export const metadata: Metadata = {
-  metadataBase: new URL('https://lynksell.id'),
+  metadataBase: new URL('https://lynksell.vercel.app'),
   title: 'LynkSell - AI Landing Page Generator untuk UMKM',
   description: 'LynkSell membantu UMKM Indonesia membuat halaman jualan profesional, ringan, dan SEO-friendly dalam 30 detik tanpa potongan komisi.',
   keywords: ['Landing Page', 'UMKM Indonesia', 'AI Landing Page', 'Jualan Online', 'Tanpa Komisi'],
@@ -33,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'id_ID',
-    url: 'https://lynksell.id',
+    url: 'https://lynksell.vercel.app',
     title: 'LynkSell - Bikin Halaman Jualan Pakai AI',
     description: 'Buat landing page jualan otomatis dengan AI. Upload foto, jadi link siap sebar ke WhatsApp dan Instagram.',
     siteName: 'LynkSell',
@@ -45,8 +39,7 @@ export const metadata: Metadata = {
     description: 'Buat landing page profesional dalam hitungan detik.',
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-icon.png',
+    icon: '/favicon.svg',
   }
 };
 
@@ -63,11 +56,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${plusJakartaSans.variable} ${dmSans.variable}`}>
-      <body className="antialiased font-body">
-        <main>
+    <html lang="id" className={geist.variable}>
+      <body className="antialiased font-sans">
+        <div>
           {children}
-        </main>
+        </div>
       </body>
     </html>
   );

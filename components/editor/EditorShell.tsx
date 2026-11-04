@@ -1,54 +1,23 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { EditorPanel } from "./EditorPanel";
-import { PreviewFrame } from "./PreviewFrame";
+import { useCallback, useState } from 'react';
+import { Eye, SlidersHorizontal } from 'lucide-react';
+import { EditorPanel } from './EditorPanel';
+import { PreviewFrame } from './PreviewFrame';
 
 export function EditorShell({ pageData }: { pageData: any }) {
   const [localPage, setLocalPage] = useState(pageData);
-  const [activeTab, setActiveTab] = useState<"editor" | "preview">("editor");
-
-  const handleUpdateLocal = (updates: any) => {
+  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
+  const handleUpdateLocal = useCallback((updates: any) => {
     setLocalPage((prev: any) => ({ ...prev, ...updates }));
-  };
-
-  return (
-    <div className="flex flex-1 w-full overflow-hidden bg-white relative">
-      {/* Mobile Tabs */}
-      <div className="lg:hidden absolute top-0 left-0 right-0 z-40 flex bg-white border-b">
-        <button
-          className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === "editor" ? "border-blue-600 text-blue-600" : "border-transparent text-neutral-500"
-          }`}
-          onClick={() => setActiveTab("editor")}
-        >
-          📝 Editor
-        </button>
-        <button
-          className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === "preview" ? "border-blue-600 text-blue-600" : "border-transparent text-neutral-500"
-          }`}
-          onClick={() => setActiveTab("preview")}
-        >
-          👁️ Preview
-        </button>
-      </div>
-
-      {/* Editor Panel (Left side on desktop, toggled on mobile) */}
-      <div
-        className={`w-full lg:w-[40%] flex-shrink-0 border-r bg-neutral-50 relative overflow-y-auto no-scrollbar 
-        ${activeTab === "editor" ? "block" : "hidden lg:block"} lg:mt-0 mt-[49px]`}
-      >
-        <EditorPanel page={localPage} onUpdateLocal={handleUpdateLocal} />
-      </div>
-
-      {/* Preview Frame (Right side on desktop, toggled on mobile) */}
-      <div
-        className={`w-full lg:w-[60%] flex-1 bg-neutral-100 relative lg:mt-0 mt-[49px]
-        ${activeTab === "preview" ? "block" : "hidden lg:block"}`}
-      >
-        <PreviewFrame page={localPage} />
-      </div>
+  }, []);
+  return <main aria-label="Editor halaman produk" className="flex h-[calc(100dvh-76px)] min-h-[420px] w-full flex-none flex-col overflow-hidden bg-surface-soft">
+    <div className="flex shrink-0 border-b bg-white p-2 lg:hidden" role="group" aria-label="Tampilan editor">
+      {([{ id: 'editor', label: 'Sunting halaman', Icon: SlidersHorizontal }, { id: 'preview', label: 'Pratinjau', Icon: Eye }] as const).map(({ id, label, Icon }) => <button key={id} type="button" aria-pressed={activeTab === id} onClick={() => setActiveTab(id)} className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full text-xs font-medium ${activeTab === id ? 'bg-surface-soft text-ink' : 'text-ink-muted'}`}><Icon size={16} aria-hidden="true" />{label}</button>)}
     </div>
-  );
+    <div className="flex min-h-0 flex-1">
+      <div className={`min-h-0 w-full shrink-0 border-r lg:w-[380px] xl:w-[420px] ${activeTab === 'editor' ? 'block' : 'hidden lg:block'}`}><EditorPanel page={localPage} onUpdateLocal={handleUpdateLocal} /></div>
+      <div className={`min-h-0 min-w-0 flex-1 ${activeTab === 'preview' ? 'block' : 'hidden lg:block'}`}><PreviewFrame page={localPage} /></div>
+    </div>
+  </main>;
 }

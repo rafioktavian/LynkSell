@@ -1,18 +1,19 @@
 "use client";
 
+import { Sparkles, CircleAlert } from "lucide-react";
+import { cleanCopy } from "@/lib/presentation";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Progress } from "@/components/ui/progress";
 import { createPageAction } from "@/app/actions/page.actions";
 import { WizardState } from "./WizardShell";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
-export function Step3Generating({ 
-  state, 
-  updateState 
-}: { 
-  state: WizardState; 
+export function Step3Generating({
+  state,
+  updateState
+}: {
+  state: WizardState;
   updateState: (s: Partial<WizardState>) => void;
 }) {
   const router = useRouter();
@@ -26,27 +27,18 @@ export function Step3Generating({
       try {
         const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 
-        updateState({ progress: 10, progressMsg: "📤 Mengupload foto produk...", error: null });
-        
-        let productImageUrl = "https://lh3.googleusercontent.com/a/default-avatar=s96-c";
-        
-        if (isDemo) {
-          await new Promise(r => setTimeout(r, 2000));
-        } else {
-          // Step A: Upload Image
-          if (!state.imageFile) throw new Error("Image file is missing.");
-          const formData = new FormData();
-          formData.append("file", state.imageFile);
-          
-          const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
-          const uploadData = await uploadRes.json();
-          
-          if (!uploadData?.success) {
-             throw new Error(uploadData?.error || "Gagal upload gambar.");
-          }
-          productImageUrl = uploadData.data?.url || uploadData.url;
-        }
-        
+        updateState({ progress: 10, progressMsg: "🖼️ Menyiapkan foto produk...", error: null });
+
+        // Step 1 already compressed and kept the image in wizard state. Use
+        // that image directly so creating a page does not depend on a Storage
+        // bucket being provisioned for this Firebase project.
+        const productImageUrl = isDemo
+          ? "https://lh3.googleusercontent.com/a/default-avatar=s96-c"
+          : state.imageBase64;
+
+        if (!isDemo && !productImageUrl) throw new Error("Foto produk tidak ditemukan. Kembali ke langkah 1 dan pilih foto lagi.");
+        await new Promise(r => setTimeout(r, 300));
+
         updateState({ progress: 30, progressMsg: "✍️ AI sedang menulis headline..." });
 
         let copyResult;
@@ -67,7 +59,7 @@ export function Step3Generating({
           const generateRes = await fetch("/api/ai/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               nama_produk: state.analysisResult.productName,
               kategori: state.analysisResult.category,
               target_pembeli: state.analysisResult.targetPembeli,
@@ -78,7 +70,7 @@ export function Step3Generating({
           const copyData = await generateRes.json();
           copyResult = copyData?.data || copyData?.copyData; // handle variations
         }
-        
+
         updateState({ progress: 60, progressMsg: "⭐ Membuat testimoni starter..." });
 
         let testimonials;
@@ -149,15 +141,16 @@ export function Step3Generating({
   return (
     <div className="py-12 text-center space-y-8">
       <div className="max-w-md mx-auto space-y-4">
+        <p className="eyebrow text-ink-muted">Langkah 03</p><h1 className="text-3xl sm:text-4xl font-semibold tracking-[-.04em]">Cerita Anda<br />sedang dirangkai.</h1>
         {state.error ? (
           <div className="space-y-4">
             <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-2xl">
-              ⚠️
+              <CircleAlert size={28} aria-hidden="true" />
             </div>
-            <h3 className="text-xl font-bold text-neutral-900">Proses Terhenti</h3>
-            <p className="text-red-500 text-sm">{state.error}</p>
-            <Button 
-               variant="outline" 
+            <h2 className="text-xl font-semibold text-ink">Proses terhenti</h2>
+            <p role="alert" className="text-red-700 text-sm">{state.error}</p>
+            <Button
+               variant="outline"
                className="mt-4"
                onClick={() => {
                  hasRun.current = false;
@@ -169,24 +162,25 @@ export function Step3Generating({
           </div>
         ) : (
           <div className="space-y-6">
-             <h3 className="text-xl font-bold text-neutral-900">{state.progressMsg}</h3>
-             
+             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border bg-[#eeecf6] text-brand"><Sparkles size={28} strokeWidth={1.5} aria-hidden="true" /></div>
+             <p role="status" aria-live="polite" className="text-base font-medium text-ink">{cleanCopy(state.progressMsg)}</p>
+
              <div className="relative">
-               <Progress value={state.progress} className="h-3 bg-neutral-100" />
-               <div className="absolute top-4 right-0 text-xs font-medium text-neutral-500">
+               <div role="progressbar" aria-label="Pembuatan halaman" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(state.progress)} className="h-1 overflow-hidden rounded-full bg-neutral-200"><div className="h-full origin-left bg-brand transition-transform duration-500 ease-soft" style={{ transform: `scaleX(${state.progress / 100})` }} /></div>
+               <div className="absolute top-4 right-0 text-xs font-medium text-ink-muted">
                  {Math.round(state.progress)}%
                </div>
              </div>
-             
-             <p className="text-sm text-neutral-500">
+
+             <p className="text-sm text-ink-muted">
                Jangan tutup halaman ini. Otomatis dialihkan saat selesai.
              </p>
 
              {/* Little animated skeleton area to make it look active */}
              <div className="mt-8 space-y-3 opacity-50">
-               <div className="h-4 bg-neutral-200 rounded-md w-3/4 mx-auto animate-pulse"></div>
-               <div className="h-4 bg-neutral-200 rounded-md w-1/2 mx-auto animate-pulse"></div>
-               <div className="h-4 bg-neutral-200 rounded-md w-5/6 mx-auto animate-pulse"></div>
+               <div className="h-4 bg-neutral-200 rounded-md w-3/4 mx-auto animate-pulse [animation-duration:700ms]"></div>
+               <div className="h-4 bg-neutral-200 rounded-md w-1/2 mx-auto animate-pulse [animation-duration:700ms]"></div>
+               <div className="h-4 bg-neutral-200 rounded-md w-5/6 mx-auto animate-pulse [animation-duration:700ms]"></div>
              </div>
           </div>
         )}

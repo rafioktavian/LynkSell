@@ -59,7 +59,7 @@ export default async function EditPage({ params }: { params: Promise<{ pageId: s
   const combinedUser = { ...session.user, ...userData };
 
   return (
-    <div className="w-full min-h-screen bg-slate-50 flex flex-col font-sans overflow-hidden">
+    <div className="w-full min-h-screen bg-surface-soft flex flex-col font-sans overflow-hidden">
        <DashboardHeader user={combinedUser} backLink="/dashboard" />
        <EditorShell pageData={pageData} />
     </div>

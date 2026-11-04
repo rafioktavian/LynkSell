@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Copy, Eye, Pencil, Trash2, ExternalLink, Loader2, CheckCircle2 } from "lucide-react";
+import { ProductImage } from "@/components/presentation/ProductImage";
+import { Copy, Eye, Pencil, Trash2, ExternalLink, Loader2, CheckCircle2, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,13 +23,9 @@ export function PageCard({ page }: { page: any }) {
   const [copied, setCopied] = useState(false);
   const router = useRouter();
 
-  const publishedDate = page.publishedAt
-    ? new Date(page.publishedAt.seconds * 1000).toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-    : "-";
+  const timestamp = typeof page.publishedAt === 'number' ? page.publishedAt : page.publishedAt?.seconds ? page.publishedAt.seconds * 1000 : null;
+  const publishedDate = timestamp && Number.isFinite(timestamp)
+    ? new Date(timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', timeZone: 'Asia/Jakarta' }) : '';
 
   const [origin, setOrigin] = useState("");
   const [host, setHost] = useState("");
@@ -70,110 +66,24 @@ export function PageCard({ page }: { page: any }) {
 
   return (
     <>
-      <div className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all flex flex-col h-full">
-        <div className="p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center flex-grow">
-          {/* Thumbnail */}
-          <div className="w-full sm:w-24 h-40 sm:h-24 bg-gray-100 rounded-lg flex-shrink-0 relative overflow-hidden border border-gray-200">
-            {page.productImageUrl ? (
-              <Image
-                src={page.productImageUrl}
-                alt={page.productName || "Preview"}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                referrerPolicy="no-referrer"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-400">
-                <span className="text-xs uppercase font-medium">Btw Foto</span>
-              </div>
-            )}
-            
-            {/* Mobile View Count Overlay */}
-            <div className="absolute bottom-2 right-2 sm:hidden bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-white flex items-center gap-1">
-              <Eye className="w-3 h-3" />
-              <span className="text-xs font-bold">{page.viewCount || 0}</span>
+      <article className="surface-card group flex h-full flex-col overflow-hidden">
+        <Link href={`/dashboard/${page.id}/edit`} className="relative block aspect-[4/3] overflow-hidden border-b bg-surface-soft">
+          <span className="sr-only">Edit {page.productName || 'halaman tanpa judul'}. </span>
+          {page.productImageUrl ? <ProductImage src={page.productImageUrl} alt={page.productName || 'Foto produk'} sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 380px" className="object-cover transition-transform duration-700 ease-soft group-hover:scale-105" /> : <div className="flex h-full flex-col items-center justify-center gap-3 text-ink-muted"><ImageIcon size={36} strokeWidth={1} aria-hidden="true" /><span className="text-xs">Ruang untuk foto produk Anda</span></div>}
+          <span className={`absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-medium backdrop-blur ${page.status === 'published' ? 'border-white/80 bg-white/95 text-[#14664b]' : 'border-white/80 bg-white/95 text-ink-muted'}`}><span className={`h-1.5 w-1.5 rounded-full ${page.status === 'published' ? 'bg-[#14664b]' : 'bg-neutral-400'}`} />{page.status === 'published' ? 'Terbit' : 'Draft'}</span>
+        </Link>
+        <div className="flex flex-1 flex-col p-5 sm:p-6">
+          <div className="mb-3 flex items-center justify-between gap-3 text-xs text-ink-muted"><span>{publishedDate ? `Terbit ${publishedDate}` : 'Halaman produk'}</span><span className="inline-flex items-center gap-1.5 tabular-nums"><Eye size={14} aria-hidden="true" />{(page.viewCount || 0).toLocaleString('id-ID')}<span className="sr-only">kunjungan</span></span></div>
+          <h3 className="mb-4 line-clamp-2 text-xl font-semibold leading-snug tracking-tight"><Link className="inline-flex min-h-11 items-center" href={`/dashboard/${page.id}/edit`}>{page.productName || 'Halaman tanpa judul'}</Link></h3>
+          {page.status === 'published' && <button type="button" className="mb-5 flex min-h-11 w-full items-center gap-2 rounded-xl border bg-surface-soft px-3 text-left text-xs text-ink-muted" onClick={copyUrl} aria-label={`Salin link halaman ${host}/${page.fullSlug}`}><span className="min-w-0 flex-1 truncate">{host}/{page.fullSlug}</span>{copied ? <CheckCircle2 size={15} className="shrink-0 text-[#14664b]" /> : <Copy size={15} className="shrink-0" />}</button>}
+          <div className="mt-auto flex items-center justify-between gap-2 border-t pt-4">
+            <Button variant="ghost" size="sm" asChild className="rounded-full"><Link href={`/dashboard/${page.id}/edit`}><Pencil size={15} className="mr-2" />Edit halaman</Link></Button>
+            <div className="flex items-center gap-1">{page.status === 'published' && <Button variant="ghost" size="icon" asChild className="rounded-full"><a href={`/${page.fullSlug}`} target="_blank" rel="noopener noreferrer" aria-label="Buka halaman produk"><ExternalLink size={17} /></a></Button>}
+              <Button variant="ghost" size="icon" className="rounded-full text-ink-muted hover:bg-red-50 hover:text-red-700" onClick={() => setShowDeleteModal(true)} aria-label={`Hapus ${page.productName || 'halaman'}`}><Trash2 size={17} /></Button>
             </div>
           </div>
-
-          {/* Info */}
-          <div className="flex-grow min-w-0 flex flex-col h-full justify-between w-full">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span
-                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                    page.status === "published"
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-gray-100 text-gray-500"
-                  }`}
-                >
-                  {page.status}
-                </span>
-                {page.status === "published" && (
-                  <span className="text-xs text-gray-400 font-medium">Diubah {publishedDate}</span>
-                )}
-              </div>
-              <h3 className="font-bold text-lg text-gray-900 truncate">
-                {page.productName || "Draft Tanpa Judul"}
-              </h3>
-            </div>
-
-            {page.status === "published" && (
-              <div className="mt-3 flex items-center bg-gray-50 border border-gray-200 rounded-md py-1.5 px-3 max-w-max self-start cursor-pointer hover:bg-gray-100 transition-colors" onClick={copyUrl}>
-                <span className="text-xs font-medium text-gray-600 truncate mr-2">
-                  {host}/{page.fullSlug}
-                </span>
-                {copied ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
-                ) : (
-                  <Copy className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Desktop Views Count */}
-          <div className="hidden sm:flex flex-col items-center justify-center px-4 shrink-0 border-l border-gray-100 h-16">
-            <p className="text-xl font-bold text-gray-900">{page.viewCount || 0}</p>
-            <p className="text-[10px] uppercase font-semibold text-gray-500 flex items-center gap-1 mt-0.5">
-              <Eye className="w-3 h-3" /> Views
-            </p>
-          </div>
         </div>
-
-        {/* Footer Actions */}
-        <div className="bg-gray-50 px-4 py-3 border-t border-gray-100 flex items-center justify-between sm:justify-end gap-2">
-          {page.status === "published" && (
-            <Button variant="outline" size="sm" asChild className="bg-white hover:bg-gray-50">
-              <a href={`/${page.fullSlug}`} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Lihat
-              </a>
-            </Button>
-          )}
-
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" asChild className="bg-white hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200">
-              <Link href={`/dashboard/${page.id}/edit`}>
-                <Pencil className="w-4 h-4 mr-2" />
-                Edit
-              </Link>
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.preventDefault();
-                setShowDeleteModal(true);
-              }}
-              className="bg-white text-gray-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50"
-            >
-              <Trash2 className="w-4 h-4" />
-              <span className="sr-only">Hapus</span>
-            </Button>
-          </div>
-        </div>
-      </div>
+      </article>
 
       <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
         <DialogContent className="sm:max-w-md">
@@ -200,7 +110,7 @@ export function PageCard({ page }: { page: any }) {
               onClick={handleDelete}
               disabled={isDeleting}
             >
-              {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin [animation-duration:600ms]" />}
               Ya, Hapus
             </Button>
           </DialogFooter>

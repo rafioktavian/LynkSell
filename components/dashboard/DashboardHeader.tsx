@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { Logo } from "@/components/ui/logo";
 
 export function DashboardHeader({ user, backLink }: { user: any, backLink?: string }) {
@@ -28,79 +29,14 @@ export function DashboardHeader({ user, backLink }: { user: any, backLink?: stri
     setTimeout(() => setCopied(false), 2000);
   };
 
-  return (
-    <header className="w-full bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between z-10 shrink-0 sticky top-0">
-      <div className="flex items-center gap-4 sm:gap-6">
-        {backLink ? (
-          <div className="flex items-center sm:border-r sm:border-gray-200 pr-2 sm:pr-6">
-            <Link href={backLink} className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors bg-gray-100 hover:bg-gray-200 sm:bg-transparent sm:hover:bg-transparent px-3 py-1.5 sm:p-0 rounded-md sm:rounded-none">
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-1" />
-              <span className="inline font-semibold">Kembali</span>
-            </Link>
-          </div> ) : (
-          <Link href="/dashboard" className="flex items-center gap-2 hidden sm:flex">
-            <Logo className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
-            <span className="font-bold text-lg sm:text-xl text-primary tracking-tight">LynkSell</span>
-          </Link>
-        )}
-        
-        
-        {/* Mobile Logo */}
-        {!backLink && (
-          <Link href="/dashboard" className="flex sm:hidden items-center gap-2">
-            <Logo className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
-          </Link>
-        )}
-        
-        {user?.brandSlug && (
-          <div className="hidden sm:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full py-1.5 px-3">
-            <span className="text-xs font-medium text-gray-700 truncate max-w-[150px]">
-              {user.brandName || "Toko Kamu"}
-            </span>
-            <div className="w-px h-3 bg-gray-300 mx-1" />
-            <button
-              onClick={copyUrl}
-              className="flex items-center text-xs text-gray-500 hover:text-primary transition-colors"
-              title="Salin URL Toko"
-            >
-              <span className="mr-1 hidden md:block">{host}/{user.brandSlug}</span>
-              {copied ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
-              ) : (
-                <Copy className="w-3.5 h-3.5" />
-              )}
-            </button>
-          </div>
-        )}
+  return <header className="glass-nav sticky top-0 z-40 w-full shrink-0">
+    <div className="mx-auto flex min-h-[76px] max-w-[1440px] items-center justify-between gap-3 px-5 sm:px-8">
+      <div className="flex min-w-0 items-center gap-5">
+        {backLink ? <Link href={backLink} className="inline-flex min-h-11 items-center gap-1.5 rounded-full pr-2 text-sm font-medium"><ChevronLeft size={18} aria-hidden="true" />Kembali</Link> : <Link href="/dashboard" aria-label="LynkSell dashboard" className="inline-flex min-h-11 items-center gap-2 text-lg font-semibold tracking-tight"><Logo className="h-8 w-8 text-brand" aria-hidden="true" /><span className="hidden sm:inline">LynkSell</span></Link>}
+        {user?.brandSlug && <button type="button" onClick={copyUrl} className="hidden min-h-11 max-w-[260px] items-center gap-2 rounded-full border bg-white/60 px-4 text-xs text-ink-muted md:flex" aria-label={`Salin link toko ${user.brandName || user.brandSlug}`}><span className="truncate">{user.brandName || user.brandSlug}</span>{copied ? <CheckCircle2 size={14} className="shrink-0 text-[#14664b]" /> : <Copy size={14} className="shrink-0" />}</button>}
       </div>
-
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-3">
-          <div className="text-right hidden sm:block">
-            <p className="font-medium text-sm text-gray-900">{user?.name || "Seller"}</p>
-          </div>
-          <div className="w-9 h-9 bg-primary/10 rounded-full border border-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden">
-            {user?.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
-            ) : (
-              (user?.name?.[0] || "S").toUpperCase()
-            )}
-          </div>
-        </div>
-        
-        <div className="w-px h-6 bg-gray-200 mx-1"></div>
-        
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => signOut({ callbackUrl: "/login" })} 
-          className="text-gray-500 hover:text-red-600 hover:bg-red-50 px-2 sm:px-3"
-        >
-          <LogOut className="w-4 h-4 sm:mr-2" />
-          <span className="hidden sm:block text-xs font-medium">Keluar</span>
-        </Button>
-      </div>
-    </header>
-  );
+      <div className="flex items-center gap-3 sm:gap-5"><span className="hidden text-xs text-ink-muted sm:inline">{user?.name || 'Seller'}</span><span className="flex h-9 w-9 items-center justify-center rounded-full border bg-[#eae7f4] text-sm font-semibold text-brand" aria-hidden="true">{(user?.name?.[0] || 'S').toUpperCase()}</span><Button variant="ghost" size="sm" onClick={() => signOut({ callbackUrl: '/login' })} className="rounded-full px-3 text-ink-muted" aria-label="Keluar akun"><LogOut size={16} /><span className="ml-2 hidden sm:inline">Keluar</span></Button></div>
+    </div>
+    <Toaster position="top-center" closeButton />
+  </header>;
 }

@@ -26,7 +26,7 @@ export const FALLBACK_COPY = {
   ],
   urgency_text: "Batch bulan ini tinggal 31 botol. Biasanya habis sebelum Jumat.",
   cta_button: "Klaim Harga Promo — Chat WhatsApp",
-  whatsapp_message: "Halo kak 👋 Saya liat produknya di lynksell.id dan tertarik bgt. Boleh tanya dulu: Masih ada stok nggak? Kalau oke langsung order ya! 😊"
+  whatsapp_message: "Halo kak 👋 Saya liat produknya di lynksell.vercel.app dan tertarik bgt. Boleh tanya dulu: Masih ada stok nggak? Kalau oke langsung order ya! 😊"
 };
 
 export const FALLBACK_ANALYSIS = {

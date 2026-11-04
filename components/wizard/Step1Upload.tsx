@@ -4,23 +4,24 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Upload, ImageIcon, ArrowRight } from "lucide-react";
+import { Upload, ArrowRight, Sparkles } from "lucide-react";
+import { cleanCopy } from "@/lib/presentation";
 import { compressImage } from "@/lib/image-compress";
 import { toast } from "sonner";
 import Image from "next/image";
 import { WizardState } from "./WizardShell";
 
-export function Step1Upload({ 
-  state, 
-  updateState, 
-  brandSlug 
-}: { 
-  state: WizardState; 
+export function Step1Upload({
+  state,
+  updateState,
+  brandSlug
+}: {
+  state: WizardState;
   updateState: (s: Partial<WizardState>) => void;
   brandSlug: string;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [progressMsg, setProgressMsg] = useState("");
   const [analysisError, setAnalysisError] = useState(false);
@@ -30,8 +31,7 @@ export function Step1Upload({
     setHost(window.location.host);
   }, []);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const processFile = async (file?: File) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       toast.error("File harus berupa gambar");
@@ -41,17 +41,17 @@ export function Step1Upload({
     try {
       setLoading(true);
       setAnalysisError(false);
-      setProgressMsg("📸 Membaca file...");
+      setProgressMsg("Membaca file...");
 
       // Compress
       const compressedBase64 = await compressImage(file, {
         onProgress: setProgressMsg,
       });
 
-      setProgressMsg("🤖 Menganalisis dengan AI...");
-      
+      setProgressMsg("Menganalisis dengan AI...");
+
       let analysisResult = state.analysisResult;
-      
+
       const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 
       try {
@@ -74,7 +74,7 @@ export function Step1Upload({
             body: JSON.stringify({ base64Image: compressedBase64 })
           });
           const analyzeData = await analyzeRes.json();
-          
+
           if (analyzeData?.success && analyzeData?.data) {
              analysisResult = analyzeData.data;
           } else {
@@ -92,7 +92,6 @@ export function Step1Upload({
 
       updateState({
         imageBase64: compressedBase64,
-        imageFile: file,
         imageMimeType: file.type,
         analysisResult: analysisResult,
         suggestedPageSlug: generatedSlug,
@@ -113,79 +112,83 @@ export function Step1Upload({
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold tracking-tight">Upload Foto Produk</h2>
-        <p className="text-neutral-500 mt-2">Foto yang bagus dapat meningkatkan konversi penjualan.</p>
+        <p className="eyebrow mb-4 text-ink-muted">Langkah 01</p><h1 className="text-3xl sm:text-4xl font-semibold tracking-[-.04em]">Mulai dengan satu foto.</h1>
+        <p className="text-ink-muted mt-2">Pilih foto yang jelas. Kita bantu merapikan cerita produknya.</p>
       </div>
 
-      <div 
-        className={`border-2 border-dashed rounded-xl p-8 cursor-pointer transition-colors flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden ${state.imageBase64 ? "border-neutral-200 bg-neutral-50/50" : "border-neutral-300 hover:bg-neutral-50"}`}
-        onClick={() => !loading && fileInputRef.current?.click()}
+      <div
+        className={`relative flex min-h-[320px] flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed p-6 ${dragging ? 'border-brand bg-[#eeecf6]' : 'border-neutral-300 bg-surface-soft'}`}
+        aria-busy={loading}
+        onDragOver={event => { event.preventDefault(); if (!loading) setDragging(true); }}
+        onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setDragging(false); }}
+        onDrop={event => { event.preventDefault(); setDragging(false); if (!loading) void processFile(event.dataTransfer.files?.[0]); }}
       >
         {state.imageBase64 ? (
           <div className="flex flex-col items-center">
             <div className="relative w-48 h-48 mb-4">
-              <Image src={state.imageBase64} alt="Preview" fill className="object-contain rounded-lg" unoptimized />
+              <Image src={state.imageBase64} alt="Pratinjau foto produk yang diunggah" fill sizes="192px" className="object-contain rounded-2xl" unoptimized />
             </div>
             <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>Ganti Foto</Button>
           </div>
         ) : (
-          <>
-            <ImageIcon className="w-12 h-12 text-neutral-400 mb-4" />
-            <p className="font-medium text-neutral-600">Klik atau drag untuk upload</p>
-            <p className="text-sm text-neutral-400 mt-1">Format JPG/PNG, ukuran ideal 1:1</p>
-          </>
+          <button type="button" disabled={loading} onClick={() => fileInputRef.current?.click()} className="flex min-h-[250px] w-full flex-col items-center justify-center rounded-2xl px-2 text-center">
+            <span className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border bg-white text-brand"><Upload size={25} strokeWidth={1.5} aria-hidden="true" /></span>
+            <span className="font-medium text-ink">Pilih atau tarik foto ke sini</span>
+            <span className="mt-2 text-xs leading-relaxed text-ink-muted">JPG atau PNG. Foto persegi tampil paling pas.</span>
+          </button>
         )}
-        <input 
-          type="file" 
-          ref={fileInputRef} 
-          className="hidden" 
-          accept="image/*" 
-          onChange={handleFileChange}
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept="image/*"
+          aria-label="Pilih foto produk"
+          onChange={event => void processFile(event.target.files?.[0])}
           disabled={loading}
         />
         {loading && (
           <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-10">
-            <div className="w-10 h-10 border-4 border-neutral-200 border-t-neutral-900 rounded-full animate-spin mb-4" />
-            <p className="font-medium text-neutral-800">{progressMsg}</p>
+            <div className="w-10 h-10 border-4 border-neutral-200 border-t-neutral-900 rounded-full animate-spin [animation-duration:600ms] mb-4" />
+            <p className="font-medium text-ink" role="status" aria-live="polite">{cleanCopy(progressMsg)}</p>
           </div>
         )}
       </div>
 
       {state.imageBase64 && (
-        <div className="bg-neutral-50 p-6 rounded-xl border border-neutral-100 space-y-4">
+        <div className="bg-surface-soft p-5 rounded-2xl border space-y-4">
            <div className="flex items-center justify-between mb-2">
-             <h3 className="font-semibold flex items-center gap-2">✨ Hasil Analisis AI</h3>
-             {analysisError && <span className="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded">Menggunakan data fallback</span>}
+             <h2 className="font-semibold flex items-center gap-2"><Sparkles size={17} aria-hidden="true" /> Informasi produk Anda</h2>
+             {analysisError && <span className="text-xs text-orange-800 bg-orange-100 px-2 py-1 rounded">Lengkapi informasi produk</span>}
            </div>
-           
+
            <div className="space-y-4">
              <div className="space-y-1.5">
                <Label htmlFor="analysis_productName">Nama Produk</Label>
-               <Input 
-                 id="analysis_productName" 
-                 value={state.analysisResult.productName} 
+               <Input
+                 id="analysis_productName"
+                 value={state.analysisResult.productName}
                  onChange={(e) => updateState({ analysisResult: { ...state.analysisResult, productName: e.target.value }})}
                />
              </div>
-             
+
              <div className="space-y-1.5">
                <Label htmlFor="analysis_category">Kategori Produk</Label>
-               <Input 
-                 id="analysis_category" 
-                 value={state.analysisResult.category} 
+               <Input
+                 id="analysis_category"
+                 value={state.analysisResult.category}
                  onChange={(e) => updateState({ analysisResult: { ...state.analysisResult, category: e.target.value }})}
                />
              </div>
 
              <div className="space-y-1.5">
                <Label htmlFor="analysis_targetPembeli">Target Pembeli</Label>
-               <Input 
-                 id="analysis_targetPembeli" 
-                 value={state.analysisResult.targetPembeli} 
+               <Input
+                 id="analysis_targetPembeli"
+                 value={state.analysisResult.targetPembeli}
                  onChange={(e) => updateState({ analysisResult: { ...state.analysisResult, targetPembeli: e.target.value }})}
                />
              </div>
-             
+
              <div className="text-sm text-neutral-600 bg-white p-3 rounded border border-neutral-200 break-all">
                 URL Anda nantinya: <span className="font-medium text-black">{host}/{brandSlug}/{state.suggestedPageSlug}</span>
              </div>
@@ -194,9 +197,9 @@ export function Step1Upload({
       )}
 
       <div className="pt-4 flex justify-end">
-        <Button 
-          size="lg" 
-          onClick={() => updateState({ step: 2 })} 
+        <Button
+          size="lg"
+          onClick={() => updateState({ step: 2 })}
           disabled={!state.imageBase64 || loading}
           className="w-full sm:w-auto"
         >

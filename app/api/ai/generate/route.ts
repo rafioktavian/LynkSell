@@ -52,7 +52,7 @@ ATURAN DAN REFERENSI KUALITAS:
 - Benefits (deskripsi): Spesifik dan nyata. Hindari "Dibuat dari bahan-bahan alami pilihan", gunakan "Formula bebas paraben, SLS, dan alkohol. Dermatologically tested — aman dipakai daily tanpa cuti."
 - urgency_text tidak boleh spammy. Hindari "BELI SEKARANG SEBELUM TERLAMBAT!!!!", gunakan yang lebih natural seperti "Batch bulan ini tinggal 31 botol. Biasanya habis sebelum Jumat."
 - cta_button harus call-to-action yang menarik seperti "Klaim Harga Promo — Chat WhatsApp" atau "Pesan Sekarang, Dikirim Hari Ini".
-- whatsapp_message harus terasa natural seperti obrolan orang asli, misal: "Halo kak 👋 Saya liat produknya di lynksell.id dan tertarik bgt sama [NAMA_PRODUK]. Boleh tanya dulu: Masih ada stok nggak? Kalau oke langsung order ya! 😊"
+- whatsapp_message harus terasa natural seperti obrolan orang asli, misal: "Halo kak 👋 Saya liat produknya di lynksell.vercel.app dan tertarik bgt sama [NAMA_PRODUK]. Boleh tanya dulu: Masih ada stok nggak? Kalau oke langsung order ya! 😊"
 - Jangan terlalu formal, buat berkesan akrab dan membujuk.
 - HANYA output JSON tanpa teks lain.`;
 

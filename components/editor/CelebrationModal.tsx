@@ -7,7 +7,8 @@ import { Copy, Share2, ExternalLink, ArrowRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { motion } from "motion/react";
+import { PartyPopper } from "lucide-react";
+import Image from "next/image";
 
 interface CelebrationModalProps {
   pageUrl: string;
@@ -27,38 +28,9 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
   const displayUrl = `${host}/${brandSlug}/${pageSlug}`;
 
   useEffect(() => {
-    // Fire confetti
-    const duration = 3000;
-    const end = Date.now() + duration;
-
-    const frame = () => {
-      confetti({
-        particleCount: 5,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ["#2563EB", "#3B82F6", "#60A5FA"],
-      });
-      confetti({
-        particleCount: 5,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ["#2563EB", "#3B82F6", "#60A5FA"],
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    };
-    frame();
-    
-    // Fallback single burst
-    confetti({
-      particleCount: 150,
-      spread: 80,
-      origin: { y: 0.6 },
-    });
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      confetti({ particleCount: 75, spread: 65, origin: { y: 0.6 }, disableForReducedMotion: true });
+    }
 
     // Generate QR Code
     QRCode.toDataURL(fullUrl, { width: 300, margin: 2, color: { dark: '#0F172A', light: '#FFFFFF' } })
@@ -69,7 +41,7 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(fullUrl);
-      toast.success("✓ Link Tersalin!");
+      toast.success("Link Tersalin!");
     } catch (err) {
       toast.error("Gagal menyalin link.");
     }
@@ -83,7 +55,7 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
   const handleInstaBioCopy = async () => {
     try {
       await navigator.clipboard.writeText(fullUrl);
-      toast.success("✓ Link Tersalin! Silakan paste di Bio IG Anda.");
+      toast.success("Link Tersalin! Silakan paste di Bio IG Anda.");
     } catch (err) {
       toast.error("Gagal menyalin link.");
     }
@@ -105,19 +77,17 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+      <div role="dialog" aria-modal="true" aria-labelledby="celebration-heading"
         className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden"
       >
         <div className="p-8 text-center space-y-6">
           <div className="mx-auto bg-blue-100 w-16 h-16 flex items-center justify-center rounded-full mb-4">
-            <span className="text-3xl">🎉</span>
+            <PartyPopper size={28} className="text-brand" aria-hidden="true" />
           </div>
-          
+
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Halaman Kamu Sudah Live!</h2>
-            <p className="text-slate-500 mt-2">Selamat! Landing page produk Anda sekarang sudah bisa diakses oleh pembeli.</p>
+            <h2 id="celebration-heading" className="text-2xl font-bold text-slate-900">Halaman Kamu Sudah Live!</h2>
+            <p className="text-ink-muted mt-2">Selamat! Landing page produk Anda sekarang sudah bisa diakses oleh pembeli.</p>
           </div>
 
           {/* URL Box */}
@@ -134,7 +104,7 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
           {qrCodeUrl && (
             <div className="flex justify-center my-6">
               <div className="p-2 bg-white rounded-xl shadow-sm border border-slate-100">
-                <img src={qrCodeUrl} alt="QR Code" className="w-32 h-32" />
+                <Image src={qrCodeUrl} alt="Kode QR menuju halaman produk" width={128} height={128} unoptimized />
               </div>
             </div>
           )}
@@ -159,7 +129,7 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
             Lihat Halaman <ExternalLink className="w-4 h-4 ml-2" />
           </Button>
         </div>
-        
+
         <div className="px-4 pb-4 bg-slate-50 flex gap-3">
             <Button variant="outline" onClick={handleBackToDashboard} className="flex-1">
                 Dashboard
@@ -168,7 +138,7 @@ export function CelebrationModal({ pageUrl, brandSlug, pageSlug, onClose }: Cele
                 <Plus className="w-4 h-4 mr-2" /> Baru
             </Button>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
