@@ -12,7 +12,6 @@ export function ReviewCarousel({ reviews }: { reviews: Review[] }) {
   return <div className="editorial-review-inner">
     <figure key={review.id || active}>
       {rating !== null && <div className="editorial-stars" role="img" aria-label={`${rating} dari 5 bintang`}>{Array.from({ length: 5 }, (_, i) => <Star key={i} size={18} fill={i < rating ? 'currentColor' : 'none'} aria-hidden="true" />)}</div>}
-      {review.source === 'ai' && <span className="editorial-sample">Ulasan contoh</span>}
       <blockquote>{cleanCopy(review.text)}</blockquote>
       {(review.name || review.location) && <figcaption>{[cleanCopy(review.name), cleanCopy(review.location)].filter(Boolean).join(' · ')}</figcaption>}
     </figure>

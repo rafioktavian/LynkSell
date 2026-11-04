@@ -182,9 +182,6 @@ export function TestimonialManager({ page, onUpdateLocal }: { page: any, onUpdat
               <div className="flex-1 min-w-0 pb-12">
                 <div className="flex items-center gap-2 mb-1">
                   <p className="font-semibold text-sm text-neutral-900 truncate">{cleanCopy(t.name)}</p>
-                  <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-full ${isAI ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700'}`}>
-                    {isAI ? "Ulasan contoh" : "Manual"}
-                  </span>
                 </div>
 
                 <div className="flex text-amber-700 mb-1.5">
