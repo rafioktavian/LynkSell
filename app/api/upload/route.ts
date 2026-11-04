@@ -1,6 +1,7 @@
+import { randomUUID } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { getAdminStorage } from '@/lib/firebase-admin';
+import { cloudinaryUserFolder } from '@/lib/cloudinary';
 import { checkRateLimit, getClientIP } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
@@ -9,81 +10,43 @@ export async function POST(req: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
-
-    const ip = getClientIP(req);
-    // Auth check + rate limit (30 req/menit)
-    if (!checkRateLimit(`upload_${ip}`, 30, 60000)) {
+    if (!checkRateLimit(`upload_${getClientIP(req)}`, 30, 60000)) {
       return NextResponse.json({ success: false, error: 'Terlalu banyak permintaan' }, { status: 429 });
     }
 
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+    if (!cloudName || !/^[a-z0-9-]+$/i.test(cloudName) || !apiKey || !apiSecret) {
+      return NextResponse.json({ success: false, error: 'Cloudinary belum dikonfigurasi di server.' }, { status: 503 });
+    }
+
     const formData = await req.formData();
-    const fileElement = formData.get('file');
-
-    if (!fileElement) {
-      return NextResponse.json({ success: false, error: 'No fileElement in formData' }, { status: 400 });
+    const file = formData.get('file');
+    if (!(file instanceof File) || !file.type.startsWith('image/')) {
+      return NextResponse.json({ success: false, error: 'Pilih file gambar yang valid.' }, { status: 400 });
     }
-    
-    if (typeof fileElement === 'string') {
-      return NextResponse.json({ success: false, error: 'fileElement is a string, not a file' }, { status: 400 });
+    if (!file.size || file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ success: false, error: 'Ukuran gambar harus lebih dari 0 dan maksimal 5MB.' }, { status: 400 });
     }
 
-    const file = fileElement as unknown as File;
-
-    if (!file.type || !file.type.startsWith('image/')) {
-      return NextResponse.json({ success: false, error: `Invalid file type: ${file.type}` }, { status: 400 });
-    }
-
-    // size max 5MB
-    const MAX_SIZE = 5 * 1024 * 1024;
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json({ success: false, error: 'File size exceeds 5MB' }, { status: 400 });
-    }
-
-    const buffer = Buffer.from(await file.arrayBuffer());
-    // Path: products/{userId}/{Date.now()}-{sanitized_filename}
-    const sanitizedName = file.name ? file.name.replace(/[^a-zA-Z0-9.\-_]/g, '') : 'uploaded_image.png';
-    const filePath = `products/${session.user.id}/${Date.now()}-${sanitizedName}`;
-
-    const adminStorage = getAdminStorage();
-    // Use the bucket provisioned for this Firebase project. Constructing a
-    // guessed bucket name can target a different project resource (or trigger
-    // bucket creation, which requires billing to be enabled).
-    const bucketName =
-      process.env.FIREBASE_STORAGE_BUCKET ||
-      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
-      adminStorage.app.options.storageBucket;
-    
-    if (!bucketName) {
-      throw new Error("No storageBucket configured");
-    }
-
-    const bucket = adminStorage.bucket(bucketName);
-    
-    const bucketFile = bucket.file(filePath);
-
-    // Set public: true dan contentType
-    await bucketFile.save(buffer, {
-      metadata: { contentType: file.type },
-      public: true,
+    const upload = new FormData();
+    upload.set('file', file);
+    upload.set('public_id', `products/${cloudinaryUserFolder(session.user.id)}/${randomUUID()}`);
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString('base64')}` },
+      body: upload,
+      signal: AbortSignal.timeout(30000),
     });
-
-    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
-    
-    // Return { success: true, data: { url: publicUrl } }
-    return NextResponse.json({ success: true, data: { url: publicUrl } });
-  } catch (err: any) {
-    console.error('[LynkSell] /api/upload error:', err);
-    const message = String(err?.message || 'Internal Server Error');
-    const billingDisabled = /billing account.*disabled|accountdisabled/i.test(message);
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: billingDisabled
-          ? 'Google Cloud Billing untuk project Firebase belum aktif. Aktifkan billing pada project yang memiliki bucket Storage, lalu coba upload kembali.'
-          : message,
-      },
-      { status: billingDisabled ? 503 : 500 },
-    );
+    const result = await response.json();
+    if (!response.ok || typeof result.secure_url !== 'string') {
+      console.error('[LynkSell] Cloudinary upload failed:', response.status, result?.error?.message);
+      return NextResponse.json({ success: false, error: 'Gagal mengunggah foto ke Cloudinary. Silakan coba lagi.' }, { status: 502 });
+    }
+    return NextResponse.json({ success: true, data: { url: result.secure_url } });
+  } catch (error) {
+    console.error('[LynkSell] /api/upload error:', error);
+    return NextResponse.json({ success: false, error: 'Upload foto gagal. Periksa koneksi server dan coba lagi.' }, { status: 503 });
   }
 }

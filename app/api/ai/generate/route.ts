@@ -42,19 +42,18 @@ Return HANYA JSON:
   "whatsapp_message": "string" 
 }
 
-ATURAN DAN REFERENSI KUALITAS: 
-- Gunakan bahasa Indonesia natural.
-- Formula Headline (pilih yang paling cocok):
-  * Hasil + Waktu + Jaminan (contoh: "Kulit Glowing dalam 7 Hari — Dijamin atau Uang Kembali")
-  * Empati + Solusi (contoh: "Akhirnya Serum yang Nggak Bikin Breakout — Cocok Buat Kulit Sensitif")
-  * Spesifisitas yang mengejutkan (contoh: "Turun 3 Kg dalam Sebulan — Dengan Rutinitas 12 Menit Sehari")
-- pain_points harus spesifik ke kategori produk ini, spesifik dan relatable seperti "Udah nyoba 5 serum vitamin C berbeda, harga mulai 50 ribu sampai 400 ribu, tapi kulit masih kusam dan belang-belang?".
-- Benefits (deskripsi): Spesifik dan nyata. Hindari "Dibuat dari bahan-bahan alami pilihan", gunakan "Formula bebas paraben, SLS, dan alkohol. Dermatologically tested — aman dipakai daily tanpa cuti."
-- urgency_text tidak boleh spammy. Hindari "BELI SEKARANG SEBELUM TERLAMBAT!!!!", gunakan yang lebih natural seperti "Batch bulan ini tinggal 31 botol. Biasanya habis sebelum Jumat."
-- cta_button harus call-to-action yang menarik seperti "Klaim Harga Promo — Chat WhatsApp" atau "Pesan Sekarang, Dikirim Hari Ini".
-- whatsapp_message harus terasa natural seperti obrolan orang asli, misal: "Halo kak 👋 Saya liat produknya di lynksell.vercel.app dan tertarik bgt sama [NAMA_PRODUK]. Boleh tanya dulu: Masih ada stok nggak? Kalau oke langsung order ya! 😊"
-- Jangan terlalu formal, buat berkesan akrab dan membujuk.
-- HANYA output JSON tanpa teks lain.`;
+ATURAN KERAS ANGGARAN TEKS:
+- Gunakan bahasa Indonesia natural, kalimat pendek, kata kerja aktif, tanpa jargon atau tanda seru berderet.
+- headline: maksimal 6 kata dan 40 karakter. Satu pernyataan manfaat, bukan pertanyaan panjang. Arah contoh: "Ngopi Jadi Lebih Istimewa."
+- subheadline: satu kalimat, maksimal 90 karakter.
+- pain_points: tepat 2 item, masing-masing maksimal 70 karakter. Tulis sebagai pertanyaan atau pernyataan singkat.
+- solution_intro: maksimal 45 karakter. Arah contoh: "Kenalan sama ${nama_produk}."
+- benefits: tepat 3 atau 4 item. title maksimal 22 karakter; desc maksimal 60 karakter dalam satu kalimat. Pakai hanya fakta dari data produk. Jangan menambah manfaat atau jaminan yang tidak disebutkan.
+- urgency_text: maksimal 60 karakter. Isi hanya jika data memberi alasan nyata; selain itu gunakan string kosong.
+- cta_button: maksimal 28 karakter. Arah contoh: "Pesan via WhatsApp".
+- whatsapp_message: maksimal 2 kalimat pendek, tanpa emoji atau klaim tambahan.
+- Jangan mengarang harga, hasil, jaminan, stok, waktu, atau angka. Jika fakta tidak tersedia, hilangkan klaimnya.
+- HANYA output JSON dengan kunci yang ditentukan, tanpa teks lain.`;
 
     const rawText = await callGeminiText(prompt);
 

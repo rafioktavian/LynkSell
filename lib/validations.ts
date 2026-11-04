@@ -1,4 +1,26 @@
 import { z } from "zod";
+import { cloudinaryUserFolder } from './cloudinary';
+
+export const productPhotosSchema = (userId: string) => {
+  const url = z.string().url().refine(value => {
+    try {
+      const parsed = new URL(value);
+      const segments = decodeURIComponent(parsed.pathname).split('/');
+      if (parsed.protocol !== 'https:' || parsed.port || parsed.username || parsed.password || parsed.search || parsed.hash) return false;
+      const validSegments = (start: number) => segments.slice(start).every(part => part && part !== '.' && part !== '..');
+      if (parsed.hostname === 'storage.googleapis.com') {
+        return segments[2] === 'products' && segments[3] === userId && segments.length >= 5 && validSegments(4);
+      }
+      const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+      return !!cloudName && parsed.hostname === 'res.cloudinary.com' && segments[1] === cloudName && segments[2] === 'image' && segments[3] === 'upload' && /^v\d+$/.test(segments[4] || '') && segments[5] === 'products' && segments[6] === cloudinaryUserFolder(userId) && segments.length === 8 && validSegments(7);
+    } catch { return false; }
+  }, 'URL foto harus berasal dari penyimpanan produk Anda');
+  return z.object({
+    productImageUrl: url.optional(),
+    backgrounds: z.object({ hero: url.optional(), benefits: url.optional(), showcase: url.optional(), closing: url.optional() }).strict().optional(),
+    gallery: z.array(url).max(6, 'Maksimal 6 foto galeri').optional(),
+  }).strict();
+};
 
 export const RegisterSchema = z.object({
   name: z.string().min(2, "Nama terlalu pendek"),

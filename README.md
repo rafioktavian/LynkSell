@@ -23,7 +23,7 @@ LynkSell adalah generator landing page bertenaga AI untuk UMKM Indonesia. Cukup 
 
 3. Setup Firebase
    - Buat project Firebase baru
-   - Aktifkan Firestore (Database) dan Firebase Storage
+   - Aktifkan Firestore (Database)
    - Aktifkan Firebase Authentication (Google provider, dan/atau Email/Password)
    - Setup API Key dan Service Account dari "Project Settings -> Service Accounts" menjadi JSON.
 
@@ -31,10 +31,15 @@ LynkSell adalah generator landing page bertenaga AI untuk UMKM Indonesia. Cukup 
    - Buat kredensial OAuth 2.0 Client ID di Google Cloud Console
    - Masukkan ID dan Secret ke `.env.local`
 
-5. Copy `.env.local.example` ke `.env.local` dan isi seluruh nilai yang dibutuhkan
+5. Buat akun Cloudinary, lalu copy `.env.example` ke `.env.local` dan isi seluruh nilai yang dibutuhkan
    ```env
    # API Keys
    GEMINI_API_KEY=xxx
+
+   # Cloudinary (khusus server, jangan gunakan NEXT_PUBLIC_ untuk secret)
+   CLOUDINARY_CLOUD_NAME=xxx
+   CLOUDINARY_API_KEY=xxx
+   CLOUDINARY_API_SECRET=xxx
 
    # Auth
    AUTH_SECRET=xxx
@@ -70,4 +75,4 @@ LynkSell adalah generator landing page bertenaga AI untuk UMKM Indonesia. Cukup 
 ## Arsitektur Fitur AI & Cloud
 - **Server Actions:** Seluruh mutasi data Firestore (pembuatan landing page, update, testimoni, dll) dilakukan murni server-side, dengan error handling robust dan rate-limiting.
 - **AI SDK:** Seluruh request ke Gemini API tidak akan pernah diekspos ke publik (selalu di Route Handler `/api/ai/*`). File di-handle terpisah. Format output Gemini diproses aman dan akan _fallback_ secara halus (graceful downgrade) jika API limit.
-- **Upload Image:** Menggunakan fungsi `compressImage` lokal sebelum multipart/form-data POST upload ke Storage Firebase menggunakan Admin SDK untuk bypass rules kompleks di client. URL referensi gambar yang disimpan adalah url Cloud Storage HTTPS bukan Base64.
+- **Upload Image:** Gambar dikompresi di browser dan diunggah melalui `/api/upload` ke Cloudinary. Kredensial hanya digunakan di server; URL gambar disimpan di Firestore. URL Firebase Storage lama tetap didukung.

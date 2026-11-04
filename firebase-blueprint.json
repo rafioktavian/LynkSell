@@ -28,6 +28,8 @@
         "fullSlug": { "type": "string" },
         "productName": { "type": "string" },
         "productImageUrl": { "type": "string" },
+        "backgrounds": { "type": "object", "properties": { "hero": { "type": "string" }, "benefits": { "type": "string" }, "showcase": { "type": "string" }, "closing": { "type": "string" } } },
+        "gallery": { "type": "array", "maxItems": 6, "items": { "type": "string" } },
         "copyData": { "type": "object" },
         "testimonials": { "type": "array" },
         "colorScheme": { "type": "string" },

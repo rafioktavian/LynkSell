@@ -29,14 +29,19 @@ export function Step3Generating({
 
         updateState({ progress: 10, progressMsg: "🖼️ Menyiapkan foto produk...", error: null });
 
-        // Step 1 already compressed and kept the image in wizard state. Use
-        // that image directly so creating a page does not depend on a Storage
-        // bucket being provisioned for this Firebase project.
-        const productImageUrl = isDemo
-          ? "https://lh3.googleusercontent.com/a/default-avatar=s96-c"
-          : state.imageBase64;
-
-        if (!isDemo && !productImageUrl) throw new Error("Foto produk tidak ditemukan. Kembali ke langkah 1 dan pilih foto lagi.");
+        let productImageUrl = "https://lh3.googleusercontent.com/a/default-avatar=s96-c";
+        if (!isDemo) {
+          if (!state.imageBase64) throw new Error("Foto produk tidak ditemukan. Kembali ke langkah 1 dan pilih foto lagi.");
+          const image = await (await fetch(state.imageBase64)).blob();
+          const form = new FormData();
+          form.append('file', image, 'product.jpg');
+          const uploadResponse = await fetch('/api/upload', { method: 'POST', body: form });
+          const uploadResult = await uploadResponse.json();
+          if (!uploadResponse.ok || !uploadResult.success || !uploadResult.data?.url) {
+            throw new Error(uploadResult.error || 'Gagal mengunggah foto produk.');
+          }
+          productImageUrl = uploadResult.data.url;
+        }
         await new Promise(r => setTimeout(r, 300));
 
         updateState({ progress: 30, progressMsg: "✍️ AI sedang menulis headline..." });
@@ -111,6 +116,7 @@ export function Step3Generating({
             testimonials,
             colorScheme: state.colorScheme,
             whatsappNumber: state.whatsappNumber,
+            socialLinks: state.socialLinks,
             harga: state.harga,
             targetPembeli: state.analysisResult.targetPembeli,
             pageSlug: state.customPageSlug || state.suggestedPageSlug

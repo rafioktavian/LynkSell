@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Geist, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
 
 const geist = Geist({
@@ -7,6 +7,7 @@ const geist = Geist({
   variable: '--font-sans',
   display: 'swap',
 });
+const display = Cormorant_Garamond({ subsets: ['latin'], weight: ['500', '600'], variable: '--font-display', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://lynksell.vercel.app'),
@@ -56,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={geist.variable}>
+    <html lang="id" className={`${geist.variable} ${display.variable}`}>
       <body className="antialiased font-sans">
         <div>
           {children}

@@ -12,6 +12,9 @@ import { ThemePicker } from "@/components/presentation/ThemePicker";
 import { ProductImage } from "@/components/presentation/ProductImage";
 import { TestimonialManager } from "./TestimonialManager";
 import { compressImage } from "@/lib/image-compress";
+import { AdditionalPhotos } from "./AdditionalPhotos";
+import { SocialLinkFields } from '@/components/presentation/SocialLinkFields';
+import { socialLinksSchema, type SocialLinks } from '@/lib/social-links';
 import {
   Dialog,
   DialogContent,
@@ -80,6 +83,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
   });
 
   const [painPoints, setPainPoints] = useState<string[]>(page.copyData?.pain_points || []);
+  const [socialLinks, setSocialLinks] = useState<SocialLinks>(page.socialLinks || {});
   const [benefits, setBenefits] = useState<any[]>(page.copyData?.benefits || []);
   const [openSection, setOpenSection] = useState<number>(0);
 
@@ -93,6 +97,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
   const debouncedFormData = useDebounce(formData, 500);
   const debouncedPainPoints = useDebounce(painPoints, 500);
   const debouncedBenefits = useDebounce(benefits, 500);
+  const debouncedSocialLinks = useDebounce(socialLinks, 500);
 
   useEffect(() => {
     onUpdateLocal({
@@ -101,6 +106,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
       harga: debouncedFormData.harga,
       colorScheme: debouncedFormData.colorScheme,
       pageSlug: debouncedFormData.pageSlug,
+      socialLinks: debouncedSocialLinks,
       copyData: {
         ...page.copyData,
         headline: debouncedFormData.headline,
@@ -114,7 +120,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
       }
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedFormData, debouncedPainPoints, debouncedBenefits]);
+  }, [debouncedFormData, debouncedPainPoints, debouncedBenefits, debouncedSocialLinks]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -140,15 +146,17 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
         body: formData,
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok || !data.success || !data.data?.url) throw new Error(data.error || 'Gagal mengunggah foto');
 
       // Instant UI update
-      onUpdateLocal({ productImageUrl: data.url });
-
-      // Background save to avoid lost image if not clicking save
-      startTransition(async () => {
-         await updatePageAction(page.id, { productImageUrl: data.url });
-      });
+      onUpdateLocal({ productImageUrl: data.data.url });
+      try {
+        const result = await updatePageAction(page.id, { productImageUrl: data.data.url });
+        if (!result.success) throw new Error(result.error || 'Gagal menyimpan foto');
+      } catch (error) {
+        onUpdateLocal({ productImageUrl: page.productImageUrl });
+        throw error;
+      }
 
       toast.success("Foto Produk berhasil diubah");
     } catch (err: any) {
@@ -160,6 +168,8 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
   };
 
   const saveUpdates = async () => {
+    const parsedSocialLinks = socialLinksSchema.safeParse(socialLinks);
+    if (!parsedSocialLinks.success) return { success: false, error: parsedSocialLinks.error.errors[0].message };
     const isSlugChanged = formData.pageSlug !== page.pageSlug;
 
     if (isSlugChanged) {
@@ -171,6 +181,7 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
 
     const updates: any = {
       productName: formData.productName,
+      socialLinks: parsedSocialLinks.data,
       whatsappNumber: formData.whatsappNumber,
       harga: formData.harga,
       colorScheme: formData.colorScheme,
@@ -280,6 +291,14 @@ export function EditorPanel({ page, onUpdateLocal }: { page: any, onUpdateLocal:
               <p className="text-xs text-ink-muted">Menerima pesan pesanan ke nomor ini.</p>
             </div>
           </div>
+        </AccordionSection>
+
+        <AccordionSection title="Foto Tambahan" isOpen={openSection === 5} onToggle={() => toggleSection(5)}>
+          <AdditionalPhotos page={page} onUpdateLocal={onUpdateLocal} />
+        </AccordionSection>
+
+        <AccordionSection title="Media Sosial (Opsional)" isOpen={openSection === 6} onToggle={() => toggleSection(6)}>
+          <SocialLinkFields idPrefix="edit-social" value={socialLinks} onChange={setSocialLinks} />
         </AccordionSection>
 
         {/* SECTION 2 - URL Halaman */}

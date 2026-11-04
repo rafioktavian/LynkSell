@@ -5,11 +5,12 @@ import { getAdminDb } from '@/lib/firebase-admin';
 import { generateSlug, getUniquePageSlug, formatWhatsApp } from '@/lib/slug';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { FieldValue } from 'firebase-admin/firestore';
-import { PageDetailsSchema, UpdateSlugSchema, UpdateCopySchema, Testimonial } from '@/lib/validations';
+import { PageDetailsSchema, UpdateSlugSchema, UpdateCopySchema, Testimonial, productPhotosSchema } from '@/lib/validations';
+import { socialLinksSchema, type SocialLinks } from '@/lib/social-links';
 
 export type ActionResult = { success: boolean; error?: string; data?: any };
 
-type CreatePageInput = {
+export type CreatePageInput = {
   productName: string;
   productImageUrl: string;
   copyData: any;
@@ -19,6 +20,9 @@ type CreatePageInput = {
   harga: string;
   targetPembeli: string;
   pageSlug?: string;
+  backgrounds?: { hero?: string; benefits?: string; showcase?: string; closing?: string };
+  gallery?: string[];
+  socialLinks?: SocialLinks;
 };
 
 export async function createPageAction(data: CreatePageInput): Promise<ActionResult> {
@@ -60,6 +64,10 @@ export async function createPageAction(data: CreatePageInput): Promise<ActionRes
     if (!validCopy.success) {
       return { success: false, error: validCopy.error.errors[0].message };
     }
+    const photos = productPhotosSchema(session.user.id).safeParse({ productImageUrl: data.productImageUrl, backgrounds: data.backgrounds, gallery: data.gallery });
+    if (!photos.success) return { success: false, error: photos.error.errors[0].message };
+    const socialLinks = socialLinksSchema.safeParse(data.socialLinks || {});
+    if (!socialLinks.success) return { success: false, error: socialLinks.error.errors[0].message };
 
     let pageSlugToUse = data.pageSlug || generateSlug(data.productName);
     const pageSlug = await getUniquePageSlug(brandSlug, pageSlugToUse);
@@ -76,6 +84,9 @@ export async function createPageAction(data: CreatePageInput): Promise<ActionRes
       fullSlug,
       productName: data.productName,
       productImageUrl: data.productImageUrl,
+      socialLinks: socialLinks.data,
+      ...(photos.data.backgrounds !== undefined && { backgrounds: photos.data.backgrounds }),
+      ...(photos.data.gallery !== undefined && { gallery: photos.data.gallery }),
       copyData: validCopy.data,
       testimonials: data.testimonials || [],
       colorScheme: validDetails.data.colorScheme,
@@ -132,6 +143,16 @@ export async function updatePageAction(pageId: string, data: UpdatePageInput): P
     const updateData: any = {
       updatedAt: FieldValue.serverTimestamp()
     };
+    const photos = productPhotosSchema(session.user.id).safeParse({ productImageUrl: data.productImageUrl, backgrounds: data.backgrounds, gallery: data.gallery });
+    if (!photos.success) return { success: false, error: photos.error.errors[0].message };
+    if (photos.data.productImageUrl !== undefined) updateData.productImageUrl = photos.data.productImageUrl;
+    if (photos.data.backgrounds !== undefined) updateData.backgrounds = photos.data.backgrounds;
+    if (photos.data.gallery !== undefined) updateData.gallery = photos.data.gallery;
+    if (data.socialLinks !== undefined) {
+      const socialLinks = socialLinksSchema.safeParse(data.socialLinks);
+      if (!socialLinks.success) return { success: false, error: socialLinks.error.errors[0].message };
+      updateData.socialLinks = socialLinks.data;
+    }
     
     if (data.copyData) {
       const validCopy = UpdateCopySchema.safeParse(data.copyData);

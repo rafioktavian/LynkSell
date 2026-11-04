@@ -43,6 +43,6 @@ export function canOptimizeImage(src: string) {
   if (src.startsWith('/')) return !src.startsWith('//');
   try {
     const url = new URL(src);
-    return url.protocol === 'https:' && ['images.unsplash.com', 'firebasestorage.googleapis.com', 'lh3.googleusercontent.com', 'ui-avatars.com'].includes(url.hostname);
+    return url.protocol === 'https:' && ['storage.googleapis.com', 'res.cloudinary.com', 'images.unsplash.com', 'firebasestorage.googleapis.com', 'lh3.googleusercontent.com', 'ui-avatars.com'].includes(url.hostname);
   } catch { return false; }
 }

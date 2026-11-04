@@ -8,6 +8,7 @@ import { Step1Upload } from "./Step1Upload";
 import { Step2Details } from "./Step2Details";
 import { Step3Generating } from "./Step3Generating";
 import { FALLBACK_ANALYSIS, FALLBACK_COPY } from "@/lib/fallbacks";
+import type { SocialLinks } from '@/lib/social-links';
 
 export type WizardState = {
   step: 1 | 2 | 3;
@@ -22,6 +23,7 @@ export type WizardState = {
   keunggulan: string;
   colorScheme: "elegant" | "bold" | "fresh" | "luxury";
   customPageSlug: string;
+  socialLinks: SocialLinks;
   // Step 3 results
   progress: number;
   progressMsg: string;
@@ -42,6 +44,7 @@ export function WizardShell({ brandSlug }: { brandSlug: string }) {
     keunggulan: "",
     colorScheme: "elegant",
     customPageSlug: "",
+    socialLinks: {},
     progress: 0,
     progressMsg: "",
     generatedCopy: null,

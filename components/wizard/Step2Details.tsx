@@ -8,6 +8,8 @@ import { WizardState } from "./WizardShell";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { ThemePicker } from "@/components/presentation/ThemePicker";
+import { SocialLinkFields } from '@/components/presentation/SocialLinkFields';
+import { socialLinksSchema } from '@/lib/social-links';
 
 export function Step2Details({
   state,
@@ -47,7 +49,7 @@ export function Step2Details({
     updateState({ harga: formatted });
   };
 
-  const isComplete = state.whatsappNumber.length >= 10 && state.harga && state.keunggulan;
+  const isComplete = state.whatsappNumber.length >= 10 && state.harga && state.keunggulan && socialLinksSchema.safeParse(state.socialLinks).success;
 
   return (
     <div className="space-y-6">
@@ -92,6 +94,11 @@ export function Step2Details({
             placeholder="Contoh: Formula dermatologis, tanpa paraben, cocok kulit sensitif"
           />
         </div>
+
+        <details className="rounded-2xl border p-4">
+          <summary className="cursor-pointer font-semibold">Media sosial (opsional)</summary>
+          <div className="mt-4"><SocialLinkFields idPrefix="wizard-social" value={state.socialLinks} onChange={socialLinks => updateState({ socialLinks })} /></div>
+        </details>
 
         <div className="space-y-4">
           <Label className="text-base font-semibold">Tema Warna Halaman</Label>

@@ -1,32 +1,31 @@
 export const FALLBACK_COPY = {
-  headline: "Kulit Glowing dalam 7 Hari — Dijamin atau Uang Kembali",
-  subheadline: "Akhirnya ada serum yang nggak bikin breakout. Cocok banget buat kamu yang punya kulit super sensitif.",
+  headline: "Rawat Kulit dengan Lembut",
+  subheadline: "Perawatan sederhana untuk rutinitas kulitmu.",
   pain_points: [
-    "Udah nyoba berbagai produk mahal tapi kulit masih kusam dan belang-belang?",
-    "Takut nyoba skincare baru karena sering banget malah bikin kulit merah dan bruntusan?",
-    "Pengen hasil cepet tapi nggak mau pake bahan kimia keras yang ngerusak skin barrier?"
+    "Kulit terasa kusam setelah beraktivitas?",
+    "Sulit menemukan perawatan yang cocok?"
   ],
-  solution_intro: "Kamu nggak sendirian. Ribuan orang udah beralih dan rasain sendiri perbedaannya.",
+  solution_intro: "Pilihan untuk perawatan kulit.",
   benefits: [
     {
-      icon: "leaf",
-      title: "Aman Tiap Hari",
-      desc: "Formula bebas paraben, SLS, dan alkohol. Aman dipakai daily tanpa cuti."
+      icon: "heart",
+      title: "Rutinitas Kulit",
+      desc: "Pilih sesuai rutinitas perawatan kulitmu."
     },
     {
-      icon: "shield-check",
-      title: "Garansi 100% Cocok",
-      desc: "Coba 7 hari. Kalau nggak ngerasa bedanya, 100% uang kembali tanpa ditanya."
+      icon: "check",
+      title: "Kenali Kebutuhan",
+      desc: "Pertimbangkan kebutuhan kulit sebelum memilih."
     },
     {
-      icon: "truck",
-      title: "Pesan Sekarang, Dikirim Hari Ini",
-      desc: "Nggak perlu nunggu lama. Order sebelum jam 3 sore, langsung kami proses."
+      icon: "package",
+      title: "Kenali Produknya",
+      desc: "Baca informasi produk sebelum memesan."
     }
   ],
-  urgency_text: "Batch bulan ini tinggal 31 botol. Biasanya habis sebelum Jumat.",
-  cta_button: "Klaim Harga Promo — Chat WhatsApp",
-  whatsapp_message: "Halo kak 👋 Saya liat produknya di lynksell.vercel.app dan tertarik bgt. Boleh tanya dulu: Masih ada stok nggak? Kalau oke langsung order ya! 😊"
+  urgency_text: "",
+  cta_button: "Pesan via WhatsApp",
+  whatsapp_message: "Halo, saya tertarik dengan produk ini. Bisa minta info?"
 };
 
 export const FALLBACK_ANALYSIS = {
