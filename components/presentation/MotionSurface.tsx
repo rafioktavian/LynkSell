@@ -75,7 +75,7 @@ export function MotionSurface({ children, className, style, ...props }: {
     };
     refreshCta();
     // Scroll timelines are progressively enhanced for browsers that lack them.
-    const parallaxSelector = '.editorial-hero-bg, .editorial-hero-product, .editorial-intro-image .editorial-cover, .editorial-benefit-photo .editorial-cover, .editorial-showcase .editorial-cover, .editorial-pains-photo, .editorial-closing > .editorial-cover';
+    const parallaxSelector = '.editorial-hero-bg, .editorial-hero-product, .editorial-intro-image .editorial-cover, .editorial-benefit-photo .editorial-cover, .editorial-pains-photo, .editorial-closing > .editorial-cover';
     const needsParallaxFallback = !view.CSS?.supports?.('animation-timeline', 'view()');
     let parallaxFrame = 0;
     const animatedPhotos = new Set<HTMLElement>();

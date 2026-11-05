@@ -7,12 +7,11 @@ import { updatePageAction } from '@/app/actions/page.actions';
 import { compressImage } from '@/lib/image-compress';
 import { ProductImage } from '@/components/presentation/ProductImage';
 
-type Slot = 'hero' | 'benefits' | 'showcase' | 'closing';
+type Slot = 'hero' | 'benefits' | 'closing';
 type Backgrounds = Partial<Record<Slot, string>>;
 const slots: { key: Slot; label: string }[] = [
   { key: 'hero', label: 'Latar Hero (landscape, 1920×1080)' },
   { key: 'benefits', label: 'Foto Keunggulan (potret/persegi)' },
-  { key: 'showcase', label: 'Foto Showcase (lebar)' },
   { key: 'closing', label: 'Latar Penutup (landscape)' },
 ];
 
